@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './Sort.scss';
 import SortGraph from '../SortGraph/SortGraph';
 
 const Sort = props => {
+    const [ array, setArray ] = useState(null);
+
     return (
         <section className="sort">
             <div className="info">
@@ -37,7 +39,7 @@ const Sort = props => {
                     </div>
                 </div>
             </div>
-            <SortGraph />
+            <SortGraph array={array} setArray={setArray} />
         </section>
     );
 };
