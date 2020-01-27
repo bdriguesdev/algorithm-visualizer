@@ -109,6 +109,17 @@ const SortGraph = props => {
         });
     };
 
+    const resetAnimation = () => {
+        const elements = document.querySelectorAll('.element');
+        elements.forEach((element, index) => {
+            const elementValue = document.getElementById('value'+index);
+            const left = calcLeftValue(index).left;
+            elementValue.style.color = 'black';
+            elementValue.style.backgroundColor = 'white';
+            element.style.left = left;
+        });
+    }
+
     return (
         <div className="sortGraph">
             <div className="elements">
@@ -127,7 +138,7 @@ const SortGraph = props => {
             </div>
             <div className="sortButtons">
                 <button onClick={sortAnimation} className="button btnPink" >START</button>
-                <button className="button btnYellow">RESET</button>
+                <button onClick={resetAnimation} className="button btnYellow">RESET</button>
                 <button className="button btnBlue">PAUSE</button>
             </div>
         </div>
