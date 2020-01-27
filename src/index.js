@@ -4,12 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-import Connect from './store/connect';
-
 ReactDOM.render(
-    <Connect>
-        <App />
-    </Connect>, 
+        <App />, 
     document.getElementById('root')
 );
 

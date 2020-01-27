@@ -50,12 +50,16 @@
 
                         .sortLink {
                             padding-left: 17px;
-                            font-size: 1rem;
-                            font-weight: 400;
-                            color: black;
                             display: flex;
                             align-items: center;
                             justify-content: center;
+
+                            a {
+                                font-size: 1rem;
+                                font-weight: 400;
+                                color: black;
+                                text-decoration: none;
+                            }
 
                             svg {
                                 display: block;
