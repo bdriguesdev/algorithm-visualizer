@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import anime, { timeline } from 'animejs'
 
 import './Header.scss';
 
@@ -7,7 +8,24 @@ const Header = () => {
 
     const openOrCloseMenu = () => {
         setIsSortMenuOpen(oldValue => !oldValue);
-    } 
+    }; 
+
+    const menuHover = (color, sort, direction) => {
+        const tl = anime.timeline({ easing: 'easeOutExpo', direction });
+        tl
+        .add({
+            targets: '#' + sort,
+            color: ['#000', color],
+            duration: 200,
+            translateX: [0, 20]
+        })
+        .add({
+            targets: '#' + sort + 'SVG',
+            duration: 200,
+            translateX: [-20, 0],
+            opacity: [0, 1]
+        }, 0)
+    };
 
     return (
         <header className="header">
@@ -25,8 +43,18 @@ const Header = () => {
                         sort
                         <div style={{ display: isSortMenuOpen? 'block': 'none' }} className="sortMenu">
                             <ul>
-                                <li className="sortLink">insertion sort</li>
-                                <li className="sortLink">bubble sort</li>
+                                <li onMouseEnter={() => menuHover('#FF165D', 'insertion', 'normal')} onMouseLeave={() => menuHover('#FF165D', 'insertion', 'reverse')} id="insertion" className="sortLink">
+                                    <svg id="insertionSVG" width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.3536 4.35355C13.5488 4.15829 13.5488 3.84171 13.3536 3.64645L10.1716 0.464466C9.97631 0.269204 9.65973 0.269204 9.46447 0.464466C9.2692 0.659728 9.2692 0.976311 9.46447 1.17157L12.2929 4L9.46447 6.82843C9.2692 7.02369 9.2692 7.34027 9.46447 7.53553C9.65973 7.7308 9.97631 7.7308 10.1716 7.53553L13.3536 4.35355ZM0 4.5H13V3.5H0V4.5Z" fill="#FF165D"/>
+                                    </svg>
+                                    insertion sort
+                                </li>
+                                <li onMouseEnter={() => menuHover('#FF9A00', 'bubble', 'normal')} onMouseLeave={() => menuHover('#FF9A00', 'bubble', 'reverse')} id="bubble" className="sortLink">
+                                    <svg id="bubbleSVG"  width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M13.3536 4.35355C13.5488 4.15829 13.5488 3.84171 13.3536 3.64645L10.1716 0.464466C9.97631 0.269204 9.65973 0.269204 9.46447 0.464466C9.2692 0.659728 9.2692 0.976311 9.46447 1.17157L12.2929 4L9.46447 6.82843C9.2692 7.02369 9.2692 7.34027 9.46447 7.53553C9.65973 7.7308 9.97631 7.7308 10.1716 7.53553L13.3536 4.35355ZM0 4.5H13V3.5H0V4.5Z" fill="#FF9A00"/>
+                                    </svg>
+                                    bubble sort
+                                </li>
                             </ul>
                         </div>
                     </li>
