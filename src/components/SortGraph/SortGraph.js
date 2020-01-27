@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import anime from 'animejs';
 
-import { insertionSortFrames } from '../../utils/sort'
+import { insertionSortFrames, bubbleSortFrames } from '../../utils/sort'
 import './SortGraph.scss';
 
 const SortGraph = props => {
@@ -54,8 +54,12 @@ const SortGraph = props => {
         };
     }
 
-    const insertionSortAnimation = () => {
-        const frames = insertionSortFrames(array);
+    const sortAnimation = () => {
+        const sort = {
+            insertion: () => insertionSortFrames(array),
+            bubble: () => bubbleSortFrames(array)
+        }
+        const frames = sort[props.sort]();
         let delay = 0;
         frames.forEach((frame) => {
             if(frame.type === 'color') {
@@ -68,6 +72,16 @@ const SortGraph = props => {
                         color: frame.color,
                         backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
                     });
+                    if(frame.y) {
+                        anime({
+                            targets: '#value' + frame.y,
+                            direction: 'normal',
+                            duration: frame.duration,
+                            easing: 'easeInOutSine',
+                            color: frame.color,
+                            backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
+                        });
+                    }
                 }, delay);
             } else if(frame.type === 'move') {
                 setTimeout(() => {
@@ -112,7 +126,7 @@ const SortGraph = props => {
                 }
             </div>
             <div className="sortButtons">
-                <button onClick={insertionSortAnimation} className="button btnPink" >START</button>
+                <button onClick={sortAnimation} className="button btnPink" >START</button>
                 <button className="button btnYellow">RESET</button>
                 <button className="button btnBlue">PAUSE</button>
             </div>
