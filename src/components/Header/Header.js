@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './Header.scss';
 
 const Header = () => {
+    const [ isSortMenuOpen, setIsSortMenuOpen ] = useState(false);
+
+    const openOrCloseMenu = () => {
+        setIsSortMenuOpen(oldValue => !oldValue);
+    } 
+
     return (
         <header className="header">
             <div className="logo">
@@ -15,7 +21,15 @@ const Header = () => {
             </div>
             <nav className="navigation">
                 <ul>
-                    <li className="link">sort</li>
+                    <li onMouseEnter={openOrCloseMenu} onMouseLeave={openOrCloseMenu} className="link">
+                        sort
+                        <div style={{ display: isSortMenuOpen? 'block': 'none' }} className="sortMenu">
+                            <ul>
+                                <li className="sortLink">insertion sort</li>
+                                <li className="sortLink">bubble sort</li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         </header>
