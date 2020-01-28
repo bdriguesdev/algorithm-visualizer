@@ -31,7 +31,9 @@ const SortGraph = props => {
         }
     }, [props.array, array]);
 
-    
+    useEffect(() => {
+        resetAnimation();
+    }, [props.sort]);
 
     const defineElementHeight = (value, index) => {
         const percentValue = 440 / 50;
