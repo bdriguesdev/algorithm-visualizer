@@ -22,6 +22,9 @@ function App() {
             <Route path='/sort/selection'>
               <Sort sortName="selection" best="n²" average="n²" worst="n²" />
             </Route>
+            <Route path='/sort/heap'>
+              <Sort sortName="heap" best="n log(n)" average="n log(n)" worst="n log(n)" />
+            </Route>
           </Switch>
       </div>
     </Router>
