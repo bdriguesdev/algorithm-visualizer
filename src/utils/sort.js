@@ -204,6 +204,13 @@ export const heapSortFrames = arr => {
         const left = index * 2 + 1;
         const right = index * 2 + 2;
         let max = index;
+        frames.push({
+            type: 'color',
+            x: arrWithInitialIndex[index][1],
+            duration: 100,
+            color: '#FFF',
+            backgroundColor: '#FF9A00'
+        });
         if(right < size && arrWithInitialIndex[right][0] > arrWithInitialIndex[max][0]) {
             max = right;
         }
@@ -212,10 +219,26 @@ export const heapSortFrames = arr => {
         }
         if(max !== index) {
             const swap = arrWithInitialIndex[max];
+            frames.push({
+                type: 'move',
+                duration: 150,
+                xNewPos: index,
+                xId: arrWithInitialIndex[max][1],
+                yNewPos: max,
+                yId: arrWithInitialIndex[index][1]
+            });
             arrWithInitialIndex[max] = arrWithInitialIndex[index];
             arrWithInitialIndex[index] = swap;
 
             heapify(max, size);
+        } else {
+            frames.push({
+                type: 'color',
+                x: arrWithInitialIndex[index][1],
+                duration: 100,
+                color: '#000',
+                backgroundColor: '#FFF'
+            });
         }
     };
     //create a max heap with the array
@@ -223,11 +246,40 @@ export const heapSortFrames = arr => {
         heapify(x, arr.length);
     }
     // extract the sorted arr
-    for(let x = arr.length - 1; x >= 0; x--) {
+    for(let x = arr.length - 1; x > 0; x--) {
         const swap = arrWithInitialIndex[0]
+        frames.push({
+            type: 'color',
+            x: arrWithInitialIndex[0][1],
+            duration: 200,
+            color: '#FFF',
+            backgroundColor: '#3EC1D3'
+        });
+        frames.push({
+            type: 'move',
+            duration: 150,
+            xNewPos: x,
+            xId: arrWithInitialIndex[0][1],
+            yNewPos: 0,
+            yId: arrWithInitialIndex[x][1]
+        });
         arrWithInitialIndex[0] = arrWithInitialIndex[x];
         arrWithInitialIndex[x] = swap;
+        frames.push({
+            type: 'color',
+            x: arrWithInitialIndex[x][1],
+            duration: 50,
+            color: '#FFF',
+            backgroundColor: '#FF165D'
+        });
         heapify(0, x);
     }
+    frames.push({
+        type: 'color',
+        x: arrWithInitialIndex[0][1],
+        duration: 50,
+        color: '#FFF',
+        backgroundColor: '#FF165D'
+    });
     return frames;
 };
