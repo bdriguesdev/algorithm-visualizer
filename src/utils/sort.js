@@ -194,3 +194,40 @@ export const selectionSortFrames = arr => {
     });
     return frames;
 };
+
+export const heapSortFrames = arr => {
+    let frames = [];
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+    const heapify = (index, size) => {
+        const left = index * 2 + 1;
+        const right = index * 2 + 2;
+        let max = index;
+        if(right < size && arrWithInitialIndex[right][0] > arrWithInitialIndex[max][0]) {
+            max = right;
+        }
+        if(left < size && arrWithInitialIndex[left][0] > arrWithInitialIndex[max][0]) {
+            max = left;
+        }
+        if(max !== index) {
+            const swap = arrWithInitialIndex[max];
+            arrWithInitialIndex[max] = arrWithInitialIndex[index];
+            arrWithInitialIndex[index] = swap;
+
+            heapify(max, size);
+        }
+    };
+    //create a max heap with the array
+    for(let x = Math.floor(arr.length / 2); x >= 0; x--) {
+        heapify(x, arr.length);
+    }
+    // extract the sorted arr
+    for(let x = arr.length - 1; x >= 0; x--) {
+        const swap = arrWithInitialIndex[0]
+        arrWithInitialIndex[0] = arrWithInitialIndex[x];
+        arrWithInitialIndex[x] = swap;
+        heapify(0, x);
+    }
+    return frames;
+};

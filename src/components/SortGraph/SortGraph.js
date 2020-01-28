@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import anime from 'animejs';
 
-import { insertionSortFrames, bubbleSortFrames, selectionSortFrames } from '../../utils/sort'
+import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames } from '../../utils/sort'
 import './SortGraph.scss';
 
 const SortGraph = props => {
@@ -60,56 +60,57 @@ const SortGraph = props => {
         const sort = {
             insertion: () => insertionSortFrames(array),
             bubble: () => bubbleSortFrames(array),
-            selection: () => selectionSortFrames(array)
+            selection: () => selectionSortFrames(array),
+            heap: () => heapSortFrames(array)
         };
         const frames = sort[props.sort]();
         let delay = 0;
-        frames.forEach((frame) => {
-            if(frame.type === 'color') {
-                setTimeout(() => {
-                    anime({
-                        targets: '#value' + frame.x,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        color: frame.color,
-                        backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
-                    });
-                    if(frame.y) {
-                        anime({
-                            targets: '#value' + frame.y,
-                            direction: 'normal',
-                            duration: frame.duration,
-                            easing: 'easeInOutSine',
-                            color: frame.color,
-                            backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
-                        });
-                    }
-                }, delay);
-            } else if(frame.type === 'move') {
-                setTimeout(() => {
-                    let x = document.getElementById('element'+frame.xId);
-                    let y = document.getElementById('element'+frame.yId);
-                    const newXLeft = calcLeftValue(frame.xNewPos).left;
-                    const newYLeft = calcLeftValue(frame.yNewPos).left;
-                    anime({
-                        targets: x,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        left: newXLeft
-                    });
-                    anime({
-                        targets: y,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        left: newYLeft
-                    });
-                }, delay + 10);
-            }
-            delay += frame.duration;
-        });
+        // frames.forEach((frame) => {
+        //     if(frame.type === 'color') {
+        //         setTimeout(() => {
+        //             anime({
+        //                 targets: '#value' + frame.x,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 color: frame.color,
+        //                 backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
+        //             });
+        //             if(frame.y) {
+        //                 anime({
+        //                     targets: '#value' + frame.y,
+        //                     direction: 'normal',
+        //                     duration: frame.duration,
+        //                     easing: 'easeInOutSine',
+        //                     color: frame.color,
+        //                     backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
+        //                 });
+        //             }
+        //         }, delay);
+        //     } else if(frame.type === 'move') {
+        //         setTimeout(() => {
+        //             let x = document.getElementById('element'+frame.xId);
+        //             let y = document.getElementById('element'+frame.yId);
+        //             const newXLeft = calcLeftValue(frame.xNewPos).left;
+        //             const newYLeft = calcLeftValue(frame.yNewPos).left;
+        //             anime({
+        //                 targets: x,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 left: newXLeft
+        //             });
+        //             anime({
+        //                 targets: y,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 left: newYLeft
+        //             });
+        //         }, delay + 10);
+        //     }
+        //     delay += frame.duration;
+        // });
     };
 
     const resetAnimation = () => {
