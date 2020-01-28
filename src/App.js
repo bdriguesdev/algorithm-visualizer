@@ -19,6 +19,9 @@ function App() {
             <Route path='/sort/bubble'>
               <Sort sortName="bubble" best="n" average="n²" worst="n²" />
             </Route>
+            <Route path='/sort/selection'>
+              <Sort sortName="selection" best="n²" average="n²" worst="n²" />
+            </Route>
           </Switch>
       </div>
     </Router>

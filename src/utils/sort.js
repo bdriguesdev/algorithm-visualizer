@@ -117,3 +117,22 @@ export const bubbleSortFrames = arr => {
     });
     return frames;
 };
+
+export const selectionSortFrames = arr => {
+    let frames = [];
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+    for(let x = 0; x < arr.length; x++) {
+        let minIndex = x;
+        for(let y = x; y < arr.length; y++) {
+            if(arrWithInitialIndex[y][0] < arrWithInitialIndex[minIndex][0]) {
+                minIndex = y;
+            }
+        }
+        const xValue = arrWithInitialIndex[x];
+        arrWithInitialIndex[x] = arrWithInitialIndex[minIndex];
+        arrWithInitialIndex[minIndex] = xValue;
+    }
+    return arrWithInitialIndex;
+};
