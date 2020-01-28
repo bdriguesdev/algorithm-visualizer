@@ -125,14 +125,65 @@ export const selectionSortFrames = arr => {
     });
     for(let x = 0; x < arr.length; x++) {
         let minIndex = x;
+        frames.push({
+            type: 'color',
+            x: arrWithInitialIndex[minIndex][1],
+            duration: 150,
+            color: '#FFF',
+            backgroundColor: '#3EC1D3'
+        });
         for(let y = x; y < arr.length; y++) {
+            frames.push({
+                type: 'color',
+                x: arrWithInitialIndex[y][1],
+                duration: 100,
+                color: '#FFF',
+                backgroundColor: '#FF9A00'
+            });
             if(arrWithInitialIndex[y][0] < arrWithInitialIndex[minIndex][0]) {
+                frames.push({
+                    type: 'color',
+                    x: arrWithInitialIndex[minIndex][1],
+                    duration: 50,
+                    color: '#000',
+                    backgroundColor: '#FFF'
+                });
                 minIndex = y;
+                frames.push({
+                    type: 'color',
+                    x: arrWithInitialIndex[y][1],
+                    duration: 50,
+                    color: '#FFF',
+                    backgroundColor: '#3EC1D3'
+                });
+            } else if(y !== minIndex) {
+                frames.push({
+                    type: 'color',
+                    x: arrWithInitialIndex[y][1],
+                    duration: 100,
+                    color: '#000',
+                    backgroundColor: '#FFF'
+                });
             }
         }
+        frames.push({
+            type: 'move',
+            duration: 150,
+            xNewPos: minIndex,
+            xId: arrWithInitialIndex[x][1],
+            yNewPos: x,
+            yId: arrWithInitialIndex[minIndex][1]
+        });
+        frames.push({
+            type: 'color',
+            x: arrWithInitialIndex[minIndex][1],
+            duration: 50,
+            color: '#FFF',
+            backgroundColor: '#FF165D'
+        });
         const xValue = arrWithInitialIndex[x];
         arrWithInitialIndex[x] = arrWithInitialIndex[minIndex];
         arrWithInitialIndex[minIndex] = xValue;
     }
-    return arrWithInitialIndex;
+    return frames;
 };
