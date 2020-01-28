@@ -132,7 +132,7 @@ export const selectionSortFrames = arr => {
             color: '#FFF',
             backgroundColor: '#3EC1D3'
         });
-        for(let y = x; y < arr.length; y++) {
+        for(let y = x + 1; y < arr.length; y++) {
             frames.push({
                 type: 'color',
                 x: arrWithInitialIndex[y][1],
