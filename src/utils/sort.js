@@ -123,7 +123,7 @@ export const selectionSortFrames = arr => {
     const arrWithInitialIndex = arr.map((value, index) => {
         return [value, index];
     });
-    for(let x = 0; x < arr.length; x++) {
+    for(let x = 0; x < arr.length - 1; x++) {
         let minIndex = x;
         frames.push({
             type: 'color',
@@ -185,5 +185,12 @@ export const selectionSortFrames = arr => {
         arrWithInitialIndex[x] = arrWithInitialIndex[minIndex];
         arrWithInitialIndex[minIndex] = xValue;
     }
+    frames.push({
+        type: 'color',
+        x: arrWithInitialIndex[arr.length - 1][1],
+        duration: 50,
+        color: '#FFF',
+        backgroundColor: '#FF165D'
+    });
     return frames;
 };
