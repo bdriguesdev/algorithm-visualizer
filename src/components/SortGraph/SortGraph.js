@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import anime from 'animejs';
 
 import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames, quickSortFrames } from '../../utils/sort'
@@ -8,6 +8,8 @@ const SortGraph = props => {
     const [ array, setArray ] = useState([]);
     const [ minValue, setMinValue ] = useState(null);
     const [ maxValue, setMaxValue ] = useState(null);
+
+    const sortType = useSort(props.sort);
 
     useEffect(() => {
         if(!props.array) {
@@ -31,9 +33,18 @@ const SortGraph = props => {
         }
     }, [props.array, array]);
 
-    useEffect(() => {
-        resetAnimation();
-    }, [props.sort]);
+    function useSort(value) {
+        const ref = useRef();
+        useEffect(() => {
+            if(ref.current === 'merge') {
+                resetAnimation('merge');
+            } else if(ref.current) {
+                resetAnimation('other');
+            }
+            ref.current = value;
+        });
+        return ref.current;
+    }
 
     const defineElementHeight = (value, index) => {
         const percentValue = 440 / 50;
@@ -136,8 +147,8 @@ const SortGraph = props => {
         });
     };
 
-    const resetAnimation = () => {
-        if(props.sort === 'merge') {
+    const resetAnimation = (sort=props.sort) => {
+        if(sort === 'merge') {
             const elements = document.querySelectorAll('.elementLine');
             elements.forEach((line, index) => {
                 const height = defineElementHeight(array[index], index).height;
