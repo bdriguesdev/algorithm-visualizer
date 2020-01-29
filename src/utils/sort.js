@@ -200,7 +200,7 @@ export const mergeSortFrames = arr => {
                 if(arrWithInitialIndex[k][0] !== leftArray[i][0] && arrWithInitialIndex[k][1] !== leftArray[i][1]) {
                     frames.push({
                         type: 'height',
-                        duration: 500,
+                        duration: 300,
                         xId: k,
                         xHeight: leftArray[i][0],
                         arrIndex: arrWithInitialIndex.slice(),
@@ -217,7 +217,7 @@ export const mergeSortFrames = arr => {
                 if(arrWithInitialIndex[k][0] !== rightArray[j][0] && arrWithInitialIndex[k][1] !== rightArray[j][1]) {
                     frames.push({
                         type: 'height',
-                        duration: 500,
+                        duration: 300,
                         xId: k,
                         xHeight: rightArray[j][0],
                         arrIndex: arrWithInitialIndex.slice(),
@@ -239,7 +239,7 @@ export const mergeSortFrames = arr => {
             if(arrWithInitialIndex[k][0] !== leftArray[i][0] && arrWithInitialIndex[k][1] !== leftArray[i][1]) {
                 frames.push({
                     type: 'height',
-                    duration: 500,
+                    duration: 300,
                     xId: k,
                     xHeight: leftArray[i][0],
                     arrIndex: arrWithInitialIndex.slice(),
@@ -259,7 +259,7 @@ export const mergeSortFrames = arr => {
             if(arrWithInitialIndex[k][0] !== rightArray[j][0] && arrWithInitialIndex[k][1] !== rightArray[j][1]) {
                 frames.push({
                     type: 'height',
-                    duration: 500,
+                    duration: 300,
                     xId: k,
                     xHeight: rightArray[j][0],
                     arrIndex: arrWithInitialIndex.slice(),
@@ -288,4 +288,11 @@ export const mergeSortFrames = arr => {
     };
     sort(0, arr.length - 1);
     return frames;
+};
+
+export const quickSortFrames = arr => {
+    let frames = [];
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
 };

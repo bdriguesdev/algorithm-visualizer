@@ -28,6 +28,9 @@ function App() {
             <Route path='/sort/merge'>
               <Sort sortName="merge" best="n log(n)" average="n log(n)" worst="n log(n)" />
             </Route>
+            <Route path='/sort/quick'>
+              <Sort sortName="quick" best="n log(n)" average="n log(n)" worst="n²" />
+            </Route>
           </Switch>
       </div>
     </Router>
