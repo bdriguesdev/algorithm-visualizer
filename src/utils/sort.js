@@ -283,3 +283,60 @@ export const heapSortFrames = arr => {
     });
     return frames;
 };
+
+export const mergeSortFrames = arr => {
+    let frames = [];
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+    //merge two sorted arrays(subarrays of arrWithInitialIndex)
+    const merge = (left, middle, right) => {
+        let i = 0;
+        let j = 0
+        let k = left;
+
+        let leftArray = [];
+        for(let x = left; x <= middle; x++) {
+            leftArray.push(arrWithInitialIndex[x]);
+        }
+        let rightArray = [];
+        for(let y = middle + 1; y <= right; y++) {
+            rightArray.push(arrWithInitialIndex[y]);
+        }
+        while(i < leftArray.length && j < rightArray.length) {
+            if(leftArray[i][0] < rightArray[j][0]) {
+                arrWithInitialIndex[k] = leftArray[i];
+                i++;
+            } else {
+                arrWithInitialIndex[k] = rightArray[j];
+                j++;
+            }
+            k++;
+        }
+        
+        while(i < leftArray.length) {
+            arrWithInitialIndex[k] = leftArray[i];
+            k++;
+            i++;
+        }
+        while(j < rightArray.length) {
+            arrWithInitialIndex[k] = rightArray[j];
+            k++;
+            j++;
+        }
+        // console.log(left, right, arrWithInitialIndex);
+    };
+    //sort a array
+    const sort = (left, right) => {
+        if(left < right) {
+            const middle = Math.floor((left + right) / 2);
+
+            sort(left, middle);
+            sort(middle + 1, right);
+
+            merge(left, middle, right);
+        }
+    };
+    sort(0, arr.length - 1);
+    console.log(arrWithInitialIndex);
+};

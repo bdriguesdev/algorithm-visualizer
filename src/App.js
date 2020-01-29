@@ -25,6 +25,9 @@ function App() {
             <Route path='/sort/heap'>
               <Sort sortName="heap" best="n log(n)" average="n log(n)" worst="n log(n)" />
             </Route>
+            <Route path='/sort/merge'>
+              <Sort sortName="merge" best="n log(n)" average="n log(n)" worst="n log(n)" />
+            </Route>
           </Switch>
       </div>
     </Router>
