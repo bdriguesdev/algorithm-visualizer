@@ -295,4 +295,36 @@ export const quickSortFrames = arr => {
     const arrWithInitialIndex = arr.map((value, index) => {
         return [value, index];
     });
+
+    const swap = (indexOne, indexTwo) => {
+        const swapElement = arrWithInitialIndex[indexOne];
+        arrWithInitialIndex[indexOne] = arrWithInitialIndex[indexTwo];
+        arrWithInitialIndex[indexTwo] = swapElement;
+    };
+
+    const partition = (l,r) => {
+        const pivot = arrWithInitialIndex[r];
+        let i = l - 1;
+        for(let j = l; j < r; j++) {
+            if(arrWithInitialIndex[j][0] <= pivot[0]) {
+                i++
+                swap(j, i);
+            }
+        }
+        swap(r, i + 1);
+        console.log(arrWithInitialIndex.slice());
+        return i + 1;
+    };
+
+    const quickSort = (l, r) => {
+        if(l < r) {
+            const pivot = partition(l, r);
+
+            quickSort(l, pivot - 1);
+            quickSort(pivot + 1, r);
+        }
+    };
+    quickSort(0, arr.length - 1);
+    // console.log(arrWithInitialIndex);   
+    return frames;
 };

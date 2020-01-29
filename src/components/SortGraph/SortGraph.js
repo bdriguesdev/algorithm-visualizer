@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import anime from 'animejs';
 
-import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames } from '../../utils/sort'
+import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames, quickSortFrames } from '../../utils/sort'
 import './SortGraph.scss';
 
 const SortGraph = props => {
@@ -62,7 +62,8 @@ const SortGraph = props => {
             bubble: () => bubbleSortFrames(array),
             selection: () => selectionSortFrames(array),
             heap: () => heapSortFrames(array),
-            merge: () => mergeSortFrames(array)
+            merge: () => mergeSortFrames(array),
+            quick: () => quickSortFrames(array)
         };
         const frames = sort[props.sort]();
         let delay = 0;
