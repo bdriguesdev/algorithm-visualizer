@@ -297,6 +297,17 @@ export const quickSortFrames = arr => {
     });
 
     const swap = (indexOne, indexTwo) => {
+        if(indexOne !== indexTwo) {
+            frames.push({
+                type: 'move',
+                duration: 500,
+                xNewPos: indexTwo,
+                xId: arrWithInitialIndex[indexOne][1],
+                yNewPos: indexOne,
+                yId: arrWithInitialIndex[indexTwo][1]
+            });
+        }
+        frames.push(colorFrame('#000', arrWithInitialIndex[indexTwo][1], 200, '#FFF'));
         const swapElement = arrWithInitialIndex[indexOne];
         arrWithInitialIndex[indexOne] = arrWithInitialIndex[indexTwo];
         arrWithInitialIndex[indexTwo] = swapElement;
@@ -304,24 +315,30 @@ export const quickSortFrames = arr => {
 
     const partition = (l,r) => {
         const pivot = arrWithInitialIndex[r];
+        frames.push(colorFrame('#FFF', pivot[1], 200, '#FF9A00'));
         let i = l - 1;
         for(let j = l; j < r; j++) {
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[j][1], 200, '#3EC1D3'));
             if(arrWithInitialIndex[j][0] <= pivot[0]) {
-                i++
-                swap(j, i);
-            }
+                i++;
+                swap(i, j);
+            } else {
+                frames.push(colorFrame('#000', arrWithInitialIndex[j][1], 200, '#FFF'));
+            } 
         }
         swap(r, i + 1);
-        console.log(arrWithInitialIndex.slice());
         return i + 1;
     };
 
     const quickSort = (l, r) => {
         if(l < r) {
             const pivot = partition(l, r);
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[pivot][1], 200, '#FF165D'));
 
             quickSort(l, pivot - 1);
             quickSort(pivot + 1, r);
+        } else if(l === r) {
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[r][1], 200, '#FF165D'));
         }
     };
     quickSort(0, arr.length - 1);
