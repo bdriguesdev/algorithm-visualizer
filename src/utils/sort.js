@@ -184,6 +184,7 @@ export const mergeSortFrames = arr => {
         let i = 0;
         let j = 0
         let k = left;
+        let lastMerge = left === 0 && right === arr.length - 1? true: false;
 
         let leftArray = [];
         for(let x = left; x <= middle; x++) {
@@ -195,61 +196,81 @@ export const mergeSortFrames = arr => {
         }
         while(i < leftArray.length && j < rightArray.length) {
             if(leftArray[i][0] < rightArray[j][0]) {
+                frames.push(colorFrame('#FFF', k, 200, '#FF9A00'));
+                if(arrWithInitialIndex[k][0] !== leftArray[i][0] && arrWithInitialIndex[k][1] !== leftArray[i][1]) {
+                    frames.push({
+                        type: 'height',
+                        duration: 500,
+                        xId: k,
+                        xHeight: leftArray[i][0],
+                        arrIndex: arrWithInitialIndex.slice(),
+                        color: lastMerge? '#FF165D': '',
+                        k
+                    });
+                } else if(lastMerge) {
+                    frames.push(colorFrame('#FFF', k, 200, '#FF165D'));
+                }
                 arrWithInitialIndex[k] = leftArray[i];
-                frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
-                // frames.push({
-                //     type: 'move',
-                //     duration: 150,
-                //     xNewPos: i,
-                //     xId: arrWithInitialIndex[k][1],
-                //     yNewPos: k,
-                //     yId: leftArray[i][1]
-                // });
                 i++;
             } else {
+                frames.push(colorFrame('#FFF', k, 200, '#FF9A00'));
+                if(arrWithInitialIndex[k][0] !== rightArray[j][0] && arrWithInitialIndex[k][1] !== rightArray[j][1]) {
+                    frames.push({
+                        type: 'height',
+                        duration: 500,
+                        xId: k,
+                        xHeight: rightArray[j][0],
+                        arrIndex: arrWithInitialIndex.slice(),
+                        color: lastMerge? '#FF165D': '',
+                        k
+                    });
+                } else if(lastMerge) {
+                    frames.push(colorFrame('#FFF', k, 200, '#FF165D'));
+                }
                 arrWithInitialIndex[k] = rightArray[j];
-                frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
-                // frames.push({
-                //     type: 'move',
-                //     duration: 150,
-                //     xNewPos: j,
-                //     xId: arrWithInitialIndex[k][1],
-                //     yNewPos: k,
-                //     yId: rightArray[j][1]
-                // });
                 j++;
             }
-            frames.push(colorFrame('#000', arrWithInitialIndex[k][1], 100, '#FFF'));
+            if(!lastMerge) frames.push(colorFrame('#000', k, 200, '#FFF'));
             k++;
         }
         
         while(i < leftArray.length) {
+            frames.push(colorFrame('#FFF', k, 200, '#FF9A00'));
+            if(arrWithInitialIndex[k][0] !== leftArray[i][0] && arrWithInitialIndex[k][1] !== leftArray[i][1]) {
+                frames.push({
+                    type: 'height',
+                    duration: 500,
+                    xId: k,
+                    xHeight: leftArray[i][0],
+                    arrIndex: arrWithInitialIndex.slice(),
+                    color: lastMerge? '#FF165D': '',
+                    k
+                });
+            } else if(lastMerge) {
+                frames.push(colorFrame('#FFF', k, 200, '#FF165D'));
+            }
             arrWithInitialIndex[k] = leftArray[i];
-            frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
-            // frames.push({
-            //     type: 'move',
-            //     duration: 150,
-            //     xNewPos: i,
-            //     xId: arrWithInitialIndex[k][1],
-            //     yNewPos: k,
-            //     yId: leftArray[i][1]
-            // });
-            frames.push(colorFrame('#000', arrWithInitialIndex[k][1], 100, '#FFF'));
+            if(!lastMerge) frames.push(colorFrame('#000', k, 200, '#FFF'));
             k++;
             i++;
         }
         while(j < rightArray.length) {
+            frames.push(colorFrame('#FFF', k, 200, '#FF9A00'));
+            if(arrWithInitialIndex[k][0] !== rightArray[j][0] && arrWithInitialIndex[k][1] !== rightArray[j][1]) {
+                frames.push({
+                    type: 'height',
+                    duration: 500,
+                    xId: k,
+                    xHeight: rightArray[j][0],
+                    arrIndex: arrWithInitialIndex.slice(),
+                    color: lastMerge? '#FF165D': '',
+                    k
+                });
+            } else if(lastMerge) {
+                frames.push(colorFrame('#FFF', k, 200, '#FF165D'));
+            }
             arrWithInitialIndex[k] = rightArray[j];
-            frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
-            // frames.push({
-            //     type: 'move',
-            //     duration: 150,
-            //     xNewPos: j,
-            //     xId: arrWithInitialIndex[k][1],
-            //     yNewPos: k,
-            //     yId: rightArray[j][1]
-            // });
-            frames.push(colorFrame('#000', arrWithInitialIndex[k][1], 100, '#FFF'));
+            if(!lastMerge) frames.push(colorFrame('#000', k, 200, '#FFF'));
             k++;
             j++;
         }

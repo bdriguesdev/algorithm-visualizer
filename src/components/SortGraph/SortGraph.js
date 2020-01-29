@@ -108,7 +108,29 @@ const SortGraph = props => {
                         easing: 'easeInOutSine',
                         left: newYLeft
                     });
+                    console.log(frame.xId, frame.xNewPos, frame.yId, frame.yNewPos, frame.arrIndex);
                 }, delay + 10);
+            } else if(frame.type === 'height') {
+                setTimeout(() => {
+                    let xLine = document.getElementById('line'+frame.xId);
+                    let xValue = document.getElementById('value'+frame.xId);
+                    const newHeight = defineElementHeight(frame.xHeight, 1).height;
+                    console.log(newHeight, frame.xHeight, frame.xId, frame.k);
+                    anime({
+                        targets: xLine,
+                        duration: frame.duration,
+                        height: newHeight,
+                        easing: 'easeInOutSine'
+                    });
+                    xValue.textContent = frame.xHeight;
+                    anime({
+                        targets: xValue,
+                        duration: 200,
+                        backgroundColor: frame.color,
+                        color: frame.color !== ''? '#FFF': '#000',
+                        easing: 'easeInOutSine'
+                    })
+                }, delay);
             }
             delay += frame.duration;
         });
