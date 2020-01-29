@@ -137,14 +137,26 @@ const SortGraph = props => {
     };
 
     const resetAnimation = () => {
-        const elements = document.querySelectorAll('.element');
-        elements.forEach((element, index) => {
-            const elementValue = document.getElementById('value'+index);
-            const left = calcLeftValue(index).left;
-            elementValue.style.color = 'black';
-            elementValue.style.backgroundColor = 'white';
-            element.style.left = left;
-        });
+        if(props.sort === 'merge') {
+            const elements = document.querySelectorAll('.elementLine');
+            elements.forEach((line, index) => {
+                const height = defineElementHeight(array[index], index).height;
+                const elementValue = document.getElementById('value'+index);
+                line.style.height = height;
+                elementValue.style.color = 'black';
+                elementValue.style.backgroundColor = 'white';
+                elementValue.textContent = array[index];
+            });
+        } else {
+            const elements = document.querySelectorAll('.element');
+            elements.forEach((element, index) => {
+                const elementValue = document.getElementById('value'+index);
+                const left = calcLeftValue(index).left;
+                elementValue.style.color = 'black';
+                elementValue.style.backgroundColor = 'white';
+                element.style.left = left;
+            });
+        }
     }
 
     return (

@@ -300,7 +300,7 @@ export const quickSortFrames = arr => {
         if(indexOne !== indexTwo) {
             frames.push({
                 type: 'move',
-                duration: 500,
+                duration: 200,
                 xNewPos: indexTwo,
                 xId: arrWithInitialIndex[indexOne][1],
                 yNewPos: indexOne,

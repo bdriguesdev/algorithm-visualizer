@@ -23,7 +23,7 @@ const Header = () => {
         .add({
             targets: '#' + sort + 'SVG',
             duration: 200,
-            translateX: [-20, 20],
+            translateX: [-10, 18],
             opacity: [0, 1]
         }, 0)
     };
