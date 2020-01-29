@@ -1,25 +1,24 @@
+const colorFrame = (color, x, duration, backgroundColor=null, y=null, ) => {
+    return {
+        type: 'color',
+        x,
+        y,
+        duration,
+        color,
+        backgroundColor
+    }
+}
+
 export const insertionSortFrames = arr => {
     let frames = [];
     const arrWithInitialIndex = arr.map((value, index) => {
         return [value, index];
     });
-    frames.push({
-        type: 'color',
-        x: 0,
-        duration: 150,
-        color: '#FFF',
-        backgroundColor: '#FF165D'
-    });
+    frames.push(colorFrame('#FFF', 0, 150, '#FF165D'));
     for(let x = 1; x < arr.length; x++) {
         let value = arrWithInitialIndex[x];
         //change color of elementValue
-        frames.push({
-            type: 'color',
-            x,
-            duration: 150,
-            color: '#FFF',
-            backgroundColor: '#FF9A00'
-        });
+        frames.push(colorFrame('#FFF', x, 150, '#FF9A00'));
         let y = x - 1;
         while(y >= 0 && arrWithInitialIndex[y][0] > value[0]) {
             arrWithInitialIndex[y + 1] = arrWithInitialIndex[y];
@@ -36,13 +35,7 @@ export const insertionSortFrames = arr => {
         }
         arrWithInitialIndex[y + 1] = value;
         //color to elementValue back to normal
-        frames.push({
-            type: 'color',
-            x,
-            duration: 150,
-            color: '#FFF',
-            backgroundColor: '#FF165D'
-        });
+        frames.push(colorFrame('#FFF', x, 150, '#FF165D'));
     }
     return frames;  
 };
@@ -56,14 +49,7 @@ export const bubbleSortFrames = arr => {
         let swap = false;
         let stopIndex = 0;
         for(let y = 0; y < arr.length - x; y++) {
-            frames.push({
-                type: 'color',
-                x: arrWithInitialIndex[y][1],
-                y: arrWithInitialIndex[y + 1][1],
-                duration: 150,
-                color: '#FFF',
-                backgroundColor: '#FF9A00'
-            });
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[y][1], 150, '#FF9A00', arrWithInitialIndex[y + 1][1]));
             if(arrWithInitialIndex[y][0] > arrWithInitialIndex[y + 1][0]) {
                 swap = true;
                 const yValue = arrWithInitialIndex[y];
@@ -79,42 +65,18 @@ export const bubbleSortFrames = arr => {
                 arrWithInitialIndex[y + 1] = yValue;
                 
             }
-            frames.push({
-                type: 'color',
-                x: arrWithInitialIndex[y][1],
-                duration: 150,
-                color: '#000',
-                backgroundColor: '#FFF'
-            });
+            frames.push(colorFrame('#000', arrWithInitialIndex[y][1], 150, '#FFF'));
             stopIndex = y + 1;
         }
-        frames.push({
-            type: 'color',
-            x: arrWithInitialIndex[stopIndex][1],
-            duration: 150,
-            color: '#FFF',
-            backgroundColor: '#FF165D'
-        });
+        frames.push(colorFrame('#FFF', arrWithInitialIndex[stopIndex][1], 150, '#FF165D'));
         if(!swap) {
             for(let z = stopIndex - 1; z > 0; z--) {
-                frames.push({
-                    type: 'color',
-                    x: arrWithInitialIndex[z][1],
-                    duration: 150,
-                    color: '#FFF',
-                    backgroundColor: '#FF165D'
-                });
+                frames.push(colorFrame('#FFF', arrWithInitialIndex[z][1], 150, '#FF165D'));
             }
             break;
         }
     }
-    frames.push({
-        type: 'color',
-        x: arrWithInitialIndex[0][1],
-        duration: 150,
-        color: '#FFF',
-        backgroundColor: '#FF165D'
-    });
+    frames.push(colorFrame('#FFF', arrWithInitialIndex[0][1], 150, '#FF165D'));
     return frames;
 };
 
@@ -125,45 +87,15 @@ export const selectionSortFrames = arr => {
     });
     for(let x = 0; x < arr.length - 1; x++) {
         let minIndex = x;
-        frames.push({
-            type: 'color',
-            x: arrWithInitialIndex[minIndex][1],
-            duration: 150,
-            color: '#FFF',
-            backgroundColor: '#3EC1D3'
-        });
+        frames.push(colorFrame('#FFF', arrWithInitialIndex[minIndex][1], 150, '#3EC1D3'));
         for(let y = x + 1; y < arr.length; y++) {
-            frames.push({
-                type: 'color',
-                x: arrWithInitialIndex[y][1],
-                duration: 100,
-                color: '#FFF',
-                backgroundColor: '#FF9A00'
-            });
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[y][1], 150, '#FF9A00'));
             if(arrWithInitialIndex[y][0] < arrWithInitialIndex[minIndex][0]) {
-                frames.push({
-                    type: 'color',
-                    x: arrWithInitialIndex[minIndex][1],
-                    duration: 50,
-                    color: '#000',
-                    backgroundColor: '#FFF'
-                });
+                frames.push(colorFrame('#000', arrWithInitialIndex[minIndex][1], 50, '#FFF'));
                 minIndex = y;
-                frames.push({
-                    type: 'color',
-                    x: arrWithInitialIndex[y][1],
-                    duration: 50,
-                    color: '#FFF',
-                    backgroundColor: '#3EC1D3'
-                });
+                frames.push(colorFrame('#FFF', arrWithInitialIndex[y][1], 50, '#3EC1D3'));
             } else if(y !== minIndex) {
-                frames.push({
-                    type: 'color',
-                    x: arrWithInitialIndex[y][1],
-                    duration: 100,
-                    color: '#000',
-                    backgroundColor: '#FFF'
-                });
+                frames.push(colorFrame('#000', arrWithInitialIndex[y][1], 100, '#FFF'));
             }
         }
         frames.push({
@@ -174,24 +106,12 @@ export const selectionSortFrames = arr => {
             yNewPos: x,
             yId: arrWithInitialIndex[minIndex][1]
         });
-        frames.push({
-            type: 'color',
-            x: arrWithInitialIndex[minIndex][1],
-            duration: 50,
-            color: '#FFF',
-            backgroundColor: '#FF165D'
-        });
+        frames.push(colorFrame('#FFF', arrWithInitialIndex[minIndex][1], 50, '#FF165D'));
         const xValue = arrWithInitialIndex[x];
         arrWithInitialIndex[x] = arrWithInitialIndex[minIndex];
         arrWithInitialIndex[minIndex] = xValue;
     }
-    frames.push({
-        type: 'color',
-        x: arrWithInitialIndex[arr.length - 1][1],
-        duration: 50,
-        color: '#FFF',
-        backgroundColor: '#FF165D'
-    });
+    frames.push(colorFrame('#FFF', arrWithInitialIndex[arr.length - 1][1], 50, '#FF165D'));
     return frames;
 };
 
@@ -204,13 +124,7 @@ export const heapSortFrames = arr => {
         const left = index * 2 + 1;
         const right = index * 2 + 2;
         let max = index;
-        frames.push({
-            type: 'color',
-            x: arrWithInitialIndex[index][1],
-            duration: 100,
-            color: '#FFF',
-            backgroundColor: '#FF9A00'
-        });
+        frames.push(colorFrame('#FFF', arrWithInitialIndex[index][1], 100, '#FF9A00'));
         if(right < size && arrWithInitialIndex[right][0] > arrWithInitialIndex[max][0]) {
             max = right;
         }
@@ -232,13 +146,7 @@ export const heapSortFrames = arr => {
 
             heapify(max, size);
         } else {
-            frames.push({
-                type: 'color',
-                x: arrWithInitialIndex[index][1],
-                duration: 100,
-                color: '#000',
-                backgroundColor: '#FFF'
-            });
+            frames.push(colorFrame('#000', arrWithInitialIndex[index][1], 100, '#FFF'));
         }
     };
     //create a max heap with the array
@@ -248,13 +156,7 @@ export const heapSortFrames = arr => {
     // extract the sorted arr
     for(let x = arr.length - 1; x > 0; x--) {
         const swap = arrWithInitialIndex[0]
-        frames.push({
-            type: 'color',
-            x: arrWithInitialIndex[0][1],
-            duration: 200,
-            color: '#FFF',
-            backgroundColor: '#3EC1D3'
-        });
+        frames.push(colorFrame('#FFF', arrWithInitialIndex[0][1], 200, '#3EC1D3'));
         frames.push({
             type: 'move',
             duration: 150,
@@ -265,22 +167,10 @@ export const heapSortFrames = arr => {
         });
         arrWithInitialIndex[0] = arrWithInitialIndex[x];
         arrWithInitialIndex[x] = swap;
-        frames.push({
-            type: 'color',
-            x: arrWithInitialIndex[x][1],
-            duration: 50,
-            color: '#FFF',
-            backgroundColor: '#FF165D'
-        });
+        frames.push(colorFrame('#FFF', arrWithInitialIndex[x][1], 50, '#FF165D'));
         heapify(0, x);
     }
-    frames.push({
-        type: 'color',
-        x: arrWithInitialIndex[0][1],
-        duration: 50,
-        color: '#FFF',
-        backgroundColor: '#FF165D'
-    });
+    frames.push(colorFrame('#FFF', arrWithInitialIndex[0][1], 50, '#FF165D'));
     return frames;
 };
 
@@ -306,25 +196,63 @@ export const mergeSortFrames = arr => {
         while(i < leftArray.length && j < rightArray.length) {
             if(leftArray[i][0] < rightArray[j][0]) {
                 arrWithInitialIndex[k] = leftArray[i];
+                frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
+                // frames.push({
+                //     type: 'move',
+                //     duration: 150,
+                //     xNewPos: i,
+                //     xId: arrWithInitialIndex[k][1],
+                //     yNewPos: k,
+                //     yId: leftArray[i][1]
+                // });
                 i++;
             } else {
                 arrWithInitialIndex[k] = rightArray[j];
+                frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
+                // frames.push({
+                //     type: 'move',
+                //     duration: 150,
+                //     xNewPos: j,
+                //     xId: arrWithInitialIndex[k][1],
+                //     yNewPos: k,
+                //     yId: rightArray[j][1]
+                // });
                 j++;
             }
+            frames.push(colorFrame('#000', arrWithInitialIndex[k][1], 100, '#FFF'));
             k++;
         }
         
         while(i < leftArray.length) {
             arrWithInitialIndex[k] = leftArray[i];
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
+            // frames.push({
+            //     type: 'move',
+            //     duration: 150,
+            //     xNewPos: i,
+            //     xId: arrWithInitialIndex[k][1],
+            //     yNewPos: k,
+            //     yId: leftArray[i][1]
+            // });
+            frames.push(colorFrame('#000', arrWithInitialIndex[k][1], 100, '#FFF'));
             k++;
             i++;
         }
         while(j < rightArray.length) {
             arrWithInitialIndex[k] = rightArray[j];
+            frames.push(colorFrame('#FFF', arrWithInitialIndex[k][1], 100, '#FF9A00'));
+            // frames.push({
+            //     type: 'move',
+            //     duration: 150,
+            //     xNewPos: j,
+            //     xId: arrWithInitialIndex[k][1],
+            //     yNewPos: k,
+            //     yId: rightArray[j][1]
+            // });
+            frames.push(colorFrame('#000', arrWithInitialIndex[k][1], 100, '#FFF'));
             k++;
             j++;
         }
-        // console.log(left, right, arrWithInitialIndex);
     };
     //sort a array
     const sort = (left, right) => {
@@ -338,5 +266,5 @@ export const mergeSortFrames = arr => {
         }
     };
     sort(0, arr.length - 1);
-    console.log(arrWithInitialIndex);
+    return frames;
 };
