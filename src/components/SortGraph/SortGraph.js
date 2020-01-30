@@ -37,12 +37,9 @@ const SortGraph = props => {
     function useSort(value) {
         const ref = useRef();
         useLayoutEffect(() => {
-            console.log(ref.current, value, ref.current !== value);
             if(ref.current === 'merge' && value !== ref.current) {
-                console.log('reset');
                 resetAnimation('merge');
             } else if(ref.current && value !== ref.current) {
-                console.log('reset');
                 resetAnimation('other');
             }
             ref.current = value;
@@ -156,7 +153,6 @@ const SortGraph = props => {
     };
 
     const resetAnimation = sort => {
-        console.log('resetFUNC');
         if(sort === 'merge') {
             const elements = document.querySelectorAll('.elementLine');
             elements.forEach((line, index) => {
