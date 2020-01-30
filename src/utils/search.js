@@ -43,17 +43,16 @@ export const breadthFirstSearchFrames = target => {
         
     };
 
-    
     rq.push(sr);
     cq.push(sc);
-    visited[rq][cq] = true;
+    visited[sr][sc] = true;
     while(rq.length > 0) {
-        
         const r = rq.shift();
         const c = cq.shift();
 
         if(m[r][c] === target) reachedEnd = true;
         exploreNeighbours(r, c);
+        //i think i don't need those for what i'm doing
         nodesLeftLayer--;
         if(nodesLeftLayer === 0) {
             nodesLeftLayer = nodesNextLayer;

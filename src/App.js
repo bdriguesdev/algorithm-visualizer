@@ -4,6 +4,7 @@ import { Switch, Route, BrowserRouter as Router, Redirect } from 'react-router-d
 import './App.css';
 import Header from './components/Header/Header';
 import Sort from './components/Sort/Sort';
+import Search from './components/Search/Search';
 
 function App() {
   return ( 
@@ -13,6 +14,7 @@ function App() {
           <Header />
           <Switch >
             <Redirect exact from="/" to="/sort/insertion" />
+            {/* SORT ROUTE */}
             <Route path='/sort/insertion'>
               <Sort sortName="insertion" best="n" average="n²" worst="n²" />
             </Route>
@@ -30,6 +32,10 @@ function App() {
             </Route>
             <Route path='/sort/quick'>
               <Sort sortName="quick" best="n log(n)" average="n log(n)" worst="n²" />
+            </Route>
+            {/* SEARCH ROUTE */}
+            <Route path='/search/breadth'>
+              <Search searchName="breadh first" time="v + e" />
             </Route>
           </Switch>
       </div>
