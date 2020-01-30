@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import anime from 'animejs';
 
 import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames, quickSortFrames } from '../../utils/sort'
@@ -8,8 +8,9 @@ const SortGraph = props => {
     const [ array, setArray ] = useState([]);
     const [ minValue, setMinValue ] = useState(null);
     const [ maxValue, setMaxValue ] = useState(null);
+    const [ animationInProgress, setAnimationInProgress ] = useState(false);
 
-    const sortType = useSort(props.sort);
+    useSort(props.sort);
 
     useEffect(() => {
         if(!props.array) {
@@ -35,10 +36,10 @@ const SortGraph = props => {
 
     function useSort(value) {
         const ref = useRef();
-        useEffect(() => {
-            if(ref.current === 'merge') {
+        useLayoutEffect(() => {
+            if(ref.current === 'merge' && value !== ref.current) {
                 resetAnimation('merge');
-            } else if(ref.current) {
+            } else if(ref.current && value !== ref.current) {
                 resetAnimation('other');
             }
             ref.current = value;
@@ -78,7 +79,7 @@ const SortGraph = props => {
         };
         const frames = sort[props.sort]();
         let delay = 0;
-        frames.forEach((frame) => {
+        frames.forEach((frame, index) => {
             if(frame.type === 'color') {
                 setTimeout(() => {
                     anime({
@@ -120,7 +121,6 @@ const SortGraph = props => {
                         easing: 'easeInOutSine',
                         left: newYLeft
                     });
-                    // console.log(frame.xId, frame.xNewPos, frame.yId, frame.yNewPos);
                 }, delay + 10);
             } else if(frame.type === 'height') {
                 setTimeout(() => {
@@ -144,10 +144,15 @@ const SortGraph = props => {
                 }, delay);
             }
             delay += frame.duration;
+            if(index === frames.length - 1) {
+                setTimeout(() => {
+                    setAnimationInProgress(false);
+                }, delay);
+            }
         });
     };
 
-    const resetAnimation = (sort=props.sort) => {
+    const resetAnimation = sort => {
         if(sort === 'merge') {
             const elements = document.querySelectorAll('.elementLine');
             elements.forEach((line, index) => {
@@ -170,6 +175,13 @@ const SortGraph = props => {
         }
     }
 
+    const handleStart = () => {
+        if(!animationInProgress) {
+            setAnimationInProgress(true);
+            sortAnimation();
+        }
+    }
+
     return (
         <div className="sortGraph">
             <div className="elements">
@@ -187,8 +199,8 @@ const SortGraph = props => {
                 }
             </div>
             <div className="sortButtons">
-                <button onClick={sortAnimation} className="button btnPink" >START</button>
-                <button onClick={resetAnimation} className="button btnYellow">RESET</button>
+                <button style={animationInProgress? { cursor: 'no-drop', color: 'rgba(255,255,255,0.4)' }: {}} onClick={handleStart} className="button btnPink" >START</button>
+                <button onClick={resetAnimation(props.sort)} className="button btnYellow">RESET</button>
                 <button className="button btnBlue">PAUSE</button>
             </div>
         </div>
