@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './Search.scss';
+import SearchGraph from '../SearchGraph/SearchGraph';
 
 const Search = props => {
     return (
@@ -19,6 +20,7 @@ const Search = props => {
                     </div>
                 </div>
             </div>
+            <SearchGraph />
         </section>
     )
 };
