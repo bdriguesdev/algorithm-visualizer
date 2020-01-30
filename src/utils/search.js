@@ -1,17 +1,22 @@
-const m = [
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-    [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
-    [30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
-    [40, 41, 42, 43, 44, 45, 46, 47, 48, 49],
-    [50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
-];
+export let m = [];
+let value = 0;
+for(let x = 0; x < 9; x++) {
+    m.push([]);
+    for(let y = value; y < value + 16; y++) {
+        m[x].push(y);
+    }
+    value += 16;
+}
 export const breadthFirstSearchFrames = target => {
     let frames = [];
     let nodesLeftLayer = 1;
     let nodesNextLayer = 0;
     let count = 0;
     let reachedEnd = false;
+    const prev = m.map(row => {
+        row = row.map(() => null);
+        return row
+    });
     const sr = 0; 
     const sc = 0; 
     const rq = [];
@@ -33,6 +38,8 @@ export const breadthFirstSearchFrames = target => {
             if(rr >= m.length || cc >= m[0].length) continue;
 
             if(visited[rr][cc]) continue;
+            else prev[rr][cc] = m[rr][cc];
+
             //if theres a block cell I need to check if it here
 
             rq.push(rr);
@@ -60,8 +67,8 @@ export const breadthFirstSearchFrames = target => {
             count++;
         }
     }
-    if(reachedEnd) {
-        return count;
-    }
-    return false;
+    
+    //path
+    prev[0][0] = 1;
+    let path = []; 
 };

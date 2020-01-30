@@ -35,7 +35,7 @@ function App() {
             </Route>
             {/* SEARCH ROUTE */}
             <Route path='/search/breadth'>
-              <Search searchName="breadh first" time="v + e" />
+              <Search searchName="breadth first" time="v + e" />
             </Route>
           </Switch>
       </div>

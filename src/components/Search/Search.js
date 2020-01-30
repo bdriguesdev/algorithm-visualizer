@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import './Search.scss';
 import SearchGraph from '../SearchGraph/SearchGraph';
 
 const Search = props => {
+    useEffect(() => {
+        setTimeout(() => {
+            const searchInfo = document.querySelector('.search .info');
+            const searchGraphElement = document.querySelector('.searchElement').getBoundingClientRect().width;
+            searchInfo.style.height = searchGraphElement * 9 + 40 + 2 * 8 + 'px';
+        }, 1);
+    });
+
     return (
         <section className="search">
             <div className="info">
