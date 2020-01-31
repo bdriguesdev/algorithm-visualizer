@@ -7,11 +7,8 @@ for(let x = 0; x < 9; x++) {
     }
     value += 16;
 }
-export const breadthFirstSearchFrames = target => {
-    let frames = [];
-    let nodesLeftLayer = 1;
-    let nodesNextLayer = 0;
-    let count = 0;
+export const breadthFirstSearchFrames = (target, tr, tc) => {
+    // let frames = [];
     let reachedEnd = false;
     const prev = m.map(row => {
         row = row.map(() => null);
@@ -36,16 +33,15 @@ export const breadthFirstSearchFrames = target => {
 
             if(rr < 0 || cc < 0) continue;
             if(rr >= m.length || cc >= m[0].length) continue;
-
-            if(visited[rr][cc]) continue;
-            else prev[rr][cc] = m[rr][cc];
-
+            
             //if theres a block cell I need to check if it here
+            if(visited[rr][cc]) continue;
+            else prev[rr][cc] = [r,c];
+            
 
             rq.push(rr);
             cq.push(cc);
             visited[rr][cc] = true;
-            nodesNextLayer++;
         }
         
     };
@@ -59,16 +55,22 @@ export const breadthFirstSearchFrames = target => {
 
         if(m[r][c] === target) reachedEnd = true;
         exploreNeighbours(r, c);
-        //i think i don't need those for what i'm doing
-        nodesLeftLayer--;
-        if(nodesLeftLayer === 0) {
-            nodesLeftLayer = nodesNextLayer;
-            nodesNextLayer = 0;
-            count++;
-        }
+        if(reachedEnd) break;
     }
     
     //path
-    prev[0][0] = 1;
-    let path = []; 
+    if(!reachedEnd) return false;
+    else {
+        let path = [];
+        let antiInfinte = 0;
+        for(let x = [tr, tc]; x !== null; x = prev[x[0]][x[1]]) {
+            antiInfinte++;
+            if(antiInfinte > 1000) break;
+            path.push(x);
+        }
+        path.reverse();
+        if(path[0][0] === 0 && path[0][1] === 0) {
+            return path;
+        }
+    }
 };

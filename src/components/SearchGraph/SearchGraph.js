@@ -6,12 +6,8 @@ import { m } from '../../utils/search'
 const SearchGraph = () => {
     const [gridWidth, setGridWidth] = useState(null);
 
-    const calcElementHeight = () => {
-
-    }
-
     useEffect(() => {
-        // console.log(m);
+        console.log(m);
         const space = document.querySelector('.searchElements').getBoundingClientRect().width - 40;
         setGridWidth((space - (2 * 15)) / 16);
     }, []);
