@@ -52,7 +52,6 @@ export const breadthFirstSearchFrames = ([sr, sc], [tr, tc]) => {
             frames.push(bgColorFrame(m[rr][cc], 50, '#FF9A00'));
             if(m[rr][cc] === m[tr][tc]) {
                 reachedEnd = true;
-                break;
             }
         }
         
@@ -66,8 +65,8 @@ export const breadthFirstSearchFrames = ([sr, sc], [tr, tc]) => {
         const r = rq.shift();
         const c = cq.shift();
 
-        exploreNeighbours(r, c);
         if(reachedEnd) break;
+        exploreNeighbours(r, c);
     }
     
     //path

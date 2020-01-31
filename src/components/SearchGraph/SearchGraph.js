@@ -33,7 +33,7 @@ const SearchGraph = props => {
 
     const changeStartPos = ([ r, c ]) => {
         const newStartPos = document.getElementById(`element${m[r][c]}`);
-        if(startPosition) {
+        if(startPosition && startPosition[0] !== r && startPosition[1] !== c) {
             const [ oldR, oldC ] = startPosition;
             const oldStartPos = document.getElementById(`element${m[oldR][oldC]}`);
             oldStartPos.style.backgroundColor = '#3EC1D3';
@@ -46,7 +46,7 @@ const SearchGraph = props => {
 
     const changeFinalPos = ([ r, c ]) => {
         const newFinalPos = document.getElementById(`element${m[r][c]}`);
-        if(finalPosition) {
+        if(finalPosition && finalPosition[0] !== r && finalPosition[1] !== c) {
             const [ oldR, oldC ] = finalPosition;
             const oldFinalPos = document.getElementById(`element${m[oldR][oldC]}`);
             oldFinalPos.style.backgroundColor = '#3EC1D3';
@@ -55,6 +55,15 @@ const SearchGraph = props => {
         newFinalPos.style.backgroundColor = '#FF165D';
         newFinalPos.textContent = 'E';
         setFinalPosition([r, c]);
+    };
+
+    const resetAnimation = () => {
+        const elements = document.querySelectorAll('.searchElement');
+        elements.forEach(element => {
+            element.style.backgroundColor = '#3EC1D3';
+        });
+        changeFinalPos(finalPosition);
+        changeStartPos(startPosition);
     };
 
     const searchAnimation = () => {
@@ -105,7 +114,7 @@ const SearchGraph = props => {
             </div>
             <div className="searchButtons">
                 <button onClick={searchAnimation} className="button btnPink" >START</button>
-                <button className="button btnYellow">RESET</button>
+                <button onClick={resetAnimation} className="button btnYellow">RESET</button>
                 <button className="button btnBlue">PAUSE</button>
             </div>
         </div>
