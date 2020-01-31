@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import anime from 'animejs';
 
 import './SearchGraph.scss';
-import { m, breadthFirstSearchFrames } from '../../utils/search';
+import { m1, breadthFirstSearchFrames } from '../../utils/search';
 import { randomValue } from '../../utils/utils';
 
 const SearchGraph = props => {
@@ -10,6 +10,7 @@ const SearchGraph = props => {
     const [animationInProgress, setAnimationInProgress] = useState(false);
     const [startPosition, setStartPosition] = useState(null);
     const [finalPosition, setFinalPosition] = useState(null);
+    const [grid, setGrid] = useState(m1);
 
     useEffect(() => {
         const startPos = [randomValue(0, 8), randomValue(0,15)];
@@ -33,7 +34,7 @@ const SearchGraph = props => {
 
     const changeStartPos = ([ r, c ]) => {
         const startDiv = document.getElementById('startElement');
-        const newStartPos = document.getElementById(`element${m[r][c]}`);
+        const newStartPos = document.getElementById(`element${m1[r][c]}`);
         // if(startPosition && startPosition[0] !== r && startPosition[1] !== c) {
         //     const [ oldR, oldC ] = startPosition;
         //     const oldStartPos = document.getElementById(`element${m[oldR][oldC]}`);
@@ -45,10 +46,10 @@ const SearchGraph = props => {
 
     const changeFinalPos = ([ r, c ]) => {
         const finalDiv = document.getElementById('finalElement');
-        const newFinalPos = document.getElementById(`element${m[r][c]}`);
+        const newFinalPos = document.getElementById(`element${m1[r][c]}`);
         if(finalPosition && finalPosition[0] !== r && finalPosition[1] !== c) {
             const [ oldR, oldC ] = finalPosition;
-            const oldFinalPos = document.getElementById(`element${m[oldR][oldC]}`);
+            const oldFinalPos = document.getElementById(`element${m1[oldR][oldC]}`);
             oldFinalPos.removeChild(finalDiv);
         }
         newFinalPos.appendChild(finalDiv);
@@ -66,7 +67,7 @@ const SearchGraph = props => {
 
     const searchAnimation = () => {
         const search = {
-            breadth: () => breadthFirstSearchFrames(startPosition, finalPosition),
+            breadth: () => breadthFirstSearchFrames(grid, startPosition, finalPosition),
         };
         const frames = search[props.search.split(' ')[0]]();
         let delay = 0;
@@ -91,18 +92,46 @@ const SearchGraph = props => {
         });
     };
 
+    const createObstacles = (row, column, value) => {
+        if(startPosition[0] === row && startPosition[1] === column) return;
+        else if(finalPosition[0] === row && finalPosition[1] === column) return;
+        setGrid(oldValue => {
+            if(oldValue[row][column] === '#') {
+                oldValue[row][column] = value;
+                anime({
+                    targets: '#element'+value,
+                    duration: 200,
+                    direction: 'normal',
+                    easing: 'easeInOutSine',
+                    backgroundColor: '#3EC1D3' 
+                });
+            }
+            else {
+                oldValue[row][column] = '#';
+                anime({
+                    targets: '#element'+value,
+                    duration: 200,
+                    direction: 'normal',
+                    easing: 'easeInOutSine',
+                    backgroundColor: '#000' 
+                }); 
+            }
+            return oldValue;
+        });
+    };
+
     const dragStart = evt => {
         evt.dataTransfer.setData("id", evt.target.getAttribute('id'));
         evt.dataTransfer.setData("element", evt.target.getAttribute('id').split('E')[0]);
-    }
+    };
 
     const dragEnter = evt => {
         evt.preventDefault();
-    }
+    };
 
     const dragOver = evt => {
         evt.preventDefault();
-    }
+    };
 
     const dragDrop = (evt, row, column) => {
         const pos = evt.dataTransfer.getData("element");
@@ -114,7 +143,7 @@ const SearchGraph = props => {
         }
         evt.target.appendChild(document.getElementById(data));
         evt.stopPropagation();
-    }
+    };
 
     return (
         <div className="searchGraph">
@@ -134,7 +163,7 @@ const SearchGraph = props => {
                     E
                 </div>
                 {
-                    m.map((row, index) => {
+                    m1.map((row, index) => {
                         return(
                             <div className="elementsRow" key={index} id={`row${index}`} >
                                 {
@@ -143,10 +172,11 @@ const SearchGraph = props => {
                                             <div 
                                                 key={element} 
                                                 style={{ width: gridWidth + 'px', height: gridWidth + 'px' }} 
-                                                className="searchElement" id={`element${element}`} 
+                                                className="searchElement" id={`element${element}`}
                                                 onDragEnter={dragEnter}
                                                 onDragOver={dragOver}
                                                 onDrop={evt => dragDrop(evt, index, column)}
+                                                onClick={() => createObstacles(index, column, element)}
                                             >
                                             </div>
                                         )

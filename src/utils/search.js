@@ -1,9 +1,9 @@
-export let m = [];
+export let m1 = [];
 let value = 0;
 for(let x = 0; x < 9; x++) {
-    m.push([]);
+    m1.push([]);
     for(let y = value; y < value + 16; y++) {
-        m[x].push(y);
+        m1[x].push(y);
     }
     value += 16;
 }
@@ -17,7 +17,7 @@ const bgColorFrame = (x, duration, backgroundColor) => {
     }
 }
 
-export const breadthFirstSearchFrames = ([sr, sc], [tr, tc]) => {
+export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     let frames = [];
     let reachedEnd = false;
     const prev = m.map(row => {
@@ -44,6 +44,7 @@ export const breadthFirstSearchFrames = ([sr, sc], [tr, tc]) => {
 
             //if theres a block cell I need to check if it here
             if(visited[rr][cc]) continue;
+            else if(m[rr][cc] === '#') continue;
             else prev[rr][cc] = [r,c];
             
             rq.push(rr);
