@@ -32,28 +32,26 @@ const SearchGraph = props => {
     }, []);
 
     const changeStartPos = ([ r, c ]) => {
+        const startDiv = document.getElementById('startElement');
         const newStartPos = document.getElementById(`element${m[r][c]}`);
-        if(startPosition && startPosition[0] !== r && startPosition[1] !== c) {
-            const [ oldR, oldC ] = startPosition;
-            const oldStartPos = document.getElementById(`element${m[oldR][oldC]}`);
-            oldStartPos.style.backgroundColor = '#3EC1D3';
-            oldStartPos.textContent = '';
-        }
-        newStartPos.style.backgroundColor = '#FF165D';
-        newStartPos.textContent = 'S';
+        // if(startPosition && startPosition[0] !== r && startPosition[1] !== c) {
+        //     const [ oldR, oldC ] = startPosition;
+        //     const oldStartPos = document.getElementById(`element${m[oldR][oldC]}`);
+        //     oldStartPos.removeChild(startDiv);
+        // }
+        newStartPos.appendChild(startDiv);
         setStartPosition([r, c]);
     };
 
     const changeFinalPos = ([ r, c ]) => {
+        const finalDiv = document.getElementById('finalElement');
         const newFinalPos = document.getElementById(`element${m[r][c]}`);
         if(finalPosition && finalPosition[0] !== r && finalPosition[1] !== c) {
             const [ oldR, oldC ] = finalPosition;
             const oldFinalPos = document.getElementById(`element${m[oldR][oldC]}`);
-            oldFinalPos.style.backgroundColor = '#3EC1D3';
-            oldFinalPos.textContent = '';
+            oldFinalPos.removeChild(finalDiv);
         }
-        newFinalPos.style.backgroundColor = '#FF165D';
-        newFinalPos.textContent = 'E';
+        newFinalPos.appendChild(finalDiv);
         setFinalPosition([r, c]);
     };
 
@@ -93,17 +91,64 @@ const SearchGraph = props => {
         });
     };
 
+    const dragStart = evt => {
+        evt.dataTransfer.setData("id", evt.target.getAttribute('id'));
+        evt.dataTransfer.setData("element", evt.target.getAttribute('id').split('E')[0]);
+    }
+
+    const dragEnter = evt => {
+        evt.preventDefault();
+    }
+
+    const dragOver = evt => {
+        evt.preventDefault();
+    }
+
+    const dragDrop = (evt, row, column) => {
+        const pos = evt.dataTransfer.getData("element");
+        const data = evt.dataTransfer.getData("id");
+        if(pos === 'start') {
+            setStartPosition([row, column]);
+        } else if(pos === 'final') {
+            setFinalPosition([row, column]);
+        }
+        evt.target.appendChild(document.getElementById(data));
+        evt.stopPropagation();
+    }
+
     return (
         <div className="searchGraph">
             <div className="searchElements">
+                <div 
+                    draggable='true' 
+                    id="startElement"
+                    onDragStart={dragStart}
+                >
+                    S
+                </div>
+                <div 
+                    draggable='true' 
+                    id="finalElement"
+                    onDragStart={dragStart}
+                >
+                    E
+                </div>
                 {
                     m.map((row, index) => {
                         return(
                             <div className="elementsRow" key={index} id={`row${index}`} >
                                 {
-                                    row.map(element => {
+                                    row.map((element, column) => {
                                         return (
-                                            <div key={element} style={{ width: gridWidth + 'px', height: gridWidth + 'px' }} className="searchElement" id={`element${element}`} ></div>
+                                            <div 
+                                                key={element} 
+                                                style={{ width: gridWidth + 'px', height: gridWidth + 'px' }} 
+                                                className="searchElement" id={`element${element}`} 
+                                                onDragEnter={dragEnter}
+                                                onDragOver={dragOver}
+                                                onDrop={evt => dragDrop(evt, index, column)}
+                                            >
+                                            </div>
                                         )
                                     })
                                 }
