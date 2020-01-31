@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import anime from 'animejs'
 
@@ -7,6 +7,44 @@ import './Header.scss';
 const Header = () => {
     const [ isSortMenuOpen, setIsSortMenuOpen ] = useState(false);
     const [ isSearchMenuOpen, setIsSearchMenuOpen ] = useState(false);
+
+    useEffect(() => {
+        console.log('here');
+        const lines = document.querySelectorAll('.logo svg line');
+        const tl = anime.timeline({ easing: 'easeInOutSine', direction: 'normal', delay: 200 });
+        tl
+        .add({
+            targets: lines[0],
+            translateX: [
+                {
+                    value: [0, 8],
+                    duration: 500
+                },
+                {
+                    value: [8, 16],
+                    duration: 500
+                }
+            ]
+        })
+        .add({
+            targets: lines[1],
+            translateX: [
+                {
+                    value: [0, -8],
+                    duration: 500
+                }
+            ]
+        }, 0)
+        .add({
+            targets: lines[2],
+            translateX: [
+                {
+                    value: [0, -8],
+                    duration: 500
+                }
+            ]
+        }, 500)
+    }, []);
 
     const openOrCloseMenu = menu => {
         if(menu === 'sort') setIsSortMenuOpen(oldValue => !oldValue);
@@ -34,9 +72,9 @@ const Header = () => {
         <header className="header">
             <div className="logo">
                 <svg className="logoImg" width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="1.5" y1="6.55671e-08" x2="1.5" y2="20" stroke="#FF165D" strokeWidth="3"/>
-                    <line x1="9.5" y1="7" x2="9.5" y2="20" stroke="#FF9A00" strokeWidth="3"/>
-                    <line x1="17.5" y1="4" x2="17.5" y2="20" stroke="#3EC1D3" strokeWidth="3"/>
+                    <line x1="1.5" y1="6.55671e-08" x2="1.5" y2="20" stroke="#3EC1D3" strokeWidth="3"/>
+                    <line x1="9.5" y1="7" x2="9.5" y2="20" stroke="#FF165D" strokeWidth="3"/>
+                    <line x1="17.5" y1="4" x2="17.5" y2="20" stroke="#FF9A00" strokeWidth="3"/>
                 </svg>
                 <h1 className="logoText">Algorithm visualizer</h1>
             </div>
