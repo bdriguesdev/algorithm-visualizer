@@ -34,24 +34,14 @@ const SearchGraph = props => {
 
     const changeStartPos = ([ r, c ]) => {
         const startDiv = document.getElementById('startElement');
-        const newStartPos = document.getElementById(`element${m1[r][c]}`);
-        // if(startPosition && startPosition[0] !== r && startPosition[1] !== c) {
-        //     const [ oldR, oldC ] = startPosition;
-        //     const oldStartPos = document.getElementById(`element${m[oldR][oldC]}`);
-        //     oldStartPos.removeChild(startDiv);
-        // }
+        const newStartPos = document.getElementById(`r${r}c${c}`);
         newStartPos.appendChild(startDiv);
         setStartPosition([r, c]);
     };
 
     const changeFinalPos = ([ r, c ]) => {
         const finalDiv = document.getElementById('finalElement');
-        const newFinalPos = document.getElementById(`element${m1[r][c]}`);
-        if(finalPosition && finalPosition[0] !== r && finalPosition[1] !== c) {
-            const [ oldR, oldC ] = finalPosition;
-            const oldFinalPos = document.getElementById(`element${m1[oldR][oldC]}`);
-            oldFinalPos.removeChild(finalDiv);
-        }
+        const newFinalPos = document.getElementById(`r${r}c${c}`);
         newFinalPos.appendChild(finalDiv);
         setFinalPosition([r, c]);
     };
@@ -60,6 +50,13 @@ const SearchGraph = props => {
         const elements = document.querySelectorAll('.searchElement');
         elements.forEach(element => {
             element.style.backgroundColor = '#3EC1D3';
+        });
+        setGrid(oldValue => {
+            return oldValue.map((row, rowIndex) => {
+                return row.map((element, columnIndex) => {
+                    return ((row.length - 1) * rowIndex) + rowIndex + columnIndex; 
+                });
+            })
         });
         changeFinalPos(finalPosition);
         changeStartPos(startPosition);
@@ -75,7 +72,7 @@ const SearchGraph = props => {
             if(frame.type === 'bg') {
                 setTimeout(() => {
                     anime({
-                        targets: '#element' + frame.x,
+                        targets: '#' + frame.x,
                         direction: 'normal',
                         duration: frame.duration,
                         easing: 'easeInOutSine',
@@ -97,9 +94,9 @@ const SearchGraph = props => {
         else if(finalPosition[0] === row && finalPosition[1] === column) return;
         setGrid(oldValue => {
             if(oldValue[row][column] === '#') {
-                oldValue[row][column] = value;
+                oldValue[row][column] = ((grid[0].length - 1) * row) + row + column; 
                 anime({
-                    targets: '#element'+value,
+                    targets: '#'+value,
                     duration: 200,
                     direction: 'normal',
                     easing: 'easeInOutSine',
@@ -109,7 +106,7 @@ const SearchGraph = props => {
             else {
                 oldValue[row][column] = '#';
                 anime({
-                    targets: '#element'+value,
+                    targets: '#'+value,
                     duration: 200,
                     direction: 'normal',
                     easing: 'easeInOutSine',
@@ -134,6 +131,7 @@ const SearchGraph = props => {
     };
 
     const dragDrop = (evt, row, column) => {
+        evt.stopPropagation();
         const pos = evt.dataTransfer.getData("element");
         const data = evt.dataTransfer.getData("id");
         if(pos === 'start') {
@@ -141,8 +139,8 @@ const SearchGraph = props => {
         } else if(pos === 'final') {
             setFinalPosition([row, column]);
         }
+        if(grid[row][column] === '#') return;
         evt.target.appendChild(document.getElementById(data));
-        evt.stopPropagation();
     };
 
     return (
@@ -163,7 +161,7 @@ const SearchGraph = props => {
                     E
                 </div>
                 {
-                    m1.map((row, index) => {
+                    grid.map((row, index) => {
                         return(
                             <div className="elementsRow" key={index} id={`row${index}`} >
                                 {
@@ -171,12 +169,12 @@ const SearchGraph = props => {
                                         return (
                                             <div 
                                                 key={element} 
-                                                style={{ width: gridWidth + 'px', height: gridWidth + 'px' }} 
-                                                className="searchElement" id={`element${element}`}
+                                                style={element === '#'? { width: gridWidth + 'px', height: gridWidth + 'px', backgroundColor: '#000' }: { width: gridWidth + 'px', height: gridWidth + 'px' }} 
+                                                className="searchElement" id={`r${index}c${column}`}
                                                 onDragEnter={dragEnter}
                                                 onDragOver={dragOver}
                                                 onDrop={evt => dragDrop(evt, index, column)}
-                                                onClick={() => createObstacles(index, column, element)}
+                                                onClick={() => createObstacles(index, column, `r${index}c${column}`)}
                                             >
                                             </div>
                                         )

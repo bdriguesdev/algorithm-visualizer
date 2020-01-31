@@ -50,7 +50,7 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
             rq.push(rr);
             cq.push(cc);
             visited[rr][cc] = true;
-            frames.push(bgColorFrame(m[rr][cc], 50, '#FF9A00'));
+            frames.push(bgColorFrame(`r${rr}c${cc}`, 50, '#FF9A00'));
             if(m[rr][cc] === m[tr][tc]) {
                 reachedEnd = true;
             }
@@ -61,7 +61,7 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     rq.push(sr);
     cq.push(sc);
     visited[sr][sc] = true;
-    frames.push(bgColorFrame(m[sr][sc], 50, '#FF9A00'));
+    frames.push(bgColorFrame(`r${sr}c${sc}`, 50, '#FF9A00'));
     while(rq.length > 0) {
         const r = rq.shift();
         const c = cq.shift();
@@ -71,22 +71,19 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     }
     
     //path
-    if(!reachedEnd) return false;
-    else {
-        let path = [];
-        let antiInfinte = 0;
-        for(let x = [tr, tc]; x !== null; x = prev[x[0]][x[1]]) {
-            antiInfinte++;
-            if(antiInfinte > 1000) break;
-            path.push(x);
-        }
-        path.reverse();
-        if(path[0][0] === sr && path[0][1] === sc) {
-            path.forEach(pos => {
-                frames.push(bgColorFrame(m[pos[0]][pos[1]], 50, '#FF165D'));
-            })
-            frames.push(bgColorFrame(m[tr][tc], 150, '#FF165D'));
-            return frames;
-        }
+    let path = [];
+    let antiInfinte = 0;
+    for(let x = [tr, tc]; x !== null; x = prev[x[0]][x[1]]) {
+        antiInfinte++;
+        if(antiInfinte > 1000) break;
+        path.push(x);
     }
+    path.reverse();
+    if(path[0][0] === sr && path[0][1] === sc) {
+        path.forEach(pos => {
+            frames.push(bgColorFrame(`r${pos[0]}c${pos[1]}`, 50, '#FF165D'));
+        })
+        frames.push(bgColorFrame(`r${tr}c${tc}`, 150, '#FF165D'));
+    }
+    return frames;
 };
