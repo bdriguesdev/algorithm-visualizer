@@ -7,8 +7,18 @@ for(let x = 0; x < 9; x++) {
     }
     value += 16;
 }
+
+const bgColorFrame = (x, duration, backgroundColor) => {
+    return {
+        type: 'bg',
+        x,
+        duration,
+        backgroundColor
+    }
+}
+
 export const breadthFirstSearchFrames = (target, tr, tc) => {
-    // let frames = [];
+    let frames = [];
     let reachedEnd = false;
     const prev = m.map(row => {
         row = row.map(() => null);
@@ -33,15 +43,19 @@ export const breadthFirstSearchFrames = (target, tr, tc) => {
 
             if(rr < 0 || cc < 0) continue;
             if(rr >= m.length || cc >= m[0].length) continue;
-            
+
             //if theres a block cell I need to check if it here
             if(visited[rr][cc]) continue;
             else prev[rr][cc] = [r,c];
             
-
             rq.push(rr);
             cq.push(cc);
             visited[rr][cc] = true;
+            frames.push(bgColorFrame(m[rr][cc], 150, '#FF9A00'));
+            if(m[rr][cc] === target) {
+                reachedEnd = true;
+                break;
+            }
         }
         
     };
@@ -49,11 +63,11 @@ export const breadthFirstSearchFrames = (target, tr, tc) => {
     rq.push(sr);
     cq.push(sc);
     visited[sr][sc] = true;
+    frames.push(bgColorFrame(m[sr][sc], 150, '#FF9A00'));
     while(rq.length > 0) {
         const r = rq.shift();
         const c = cq.shift();
 
-        if(m[r][c] === target) reachedEnd = true;
         exploreNeighbours(r, c);
         if(reachedEnd) break;
     }
@@ -70,7 +84,11 @@ export const breadthFirstSearchFrames = (target, tr, tc) => {
         }
         path.reverse();
         if(path[0][0] === 0 && path[0][1] === 0) {
-            return path;
+            path.forEach(pos => {
+                frames.push(bgColorFrame(m[pos[0]][pos[1]], 150, '#FF165D'));
+            })
+            frames.push(bgColorFrame(m[tr][tc], 150, '#FF165D'));
+            return frames;
         }
     }
 };

@@ -28,7 +28,7 @@ const Search = props => {
                     </div>
                 </div>
             </div>
-            <SearchGraph />
+            <SearchGraph search={props.searchName} />
         </section>
     )
 };
