@@ -3,19 +3,63 @@ import anime from 'animejs';
 
 import './SearchGraph.scss';
 import { m, breadthFirstSearchFrames } from '../../utils/search';
+import { randomValue } from '../../utils/utils';
 
 const SearchGraph = props => {
     const [gridWidth, setGridWidth] = useState(null);
     const [animationInProgress, setAnimationInProgress] = useState(false);
+    const [startPosition, setStartPosition] = useState(null);
+    const [finalPosition, setFinalPosition] = useState(null);
 
     useEffect(() => {
+        const startPos = [randomValue(0, 8), randomValue(0,15)];
+        const finalPos = [];
         const space = document.querySelector('.searchElements').getBoundingClientRect().width - 40;
+
         setGridWidth((space - (2 * 15)) / 16);
+        let antiInfinite = 0;
+        while(finalPos.length === 0) {
+            antiInfinite++;
+            if(antiInfinite>250) break;
+            const r = randomValue(0, 8);
+            const c = randomValue(0, 15);
+            if(r === startPos[0] && c === startPos[1]) continue;
+            finalPos.push(r);
+            finalPos.push(c);
+        }
+        changeStartPos(startPos);
+        changeFinalPos(finalPos)
     }, []);
+
+    const changeStartPos = ([ r, c ]) => {
+        const newStartPos = document.getElementById(`element${m[r][c]}`);
+        if(startPosition) {
+            const [ oldR, oldC ] = startPosition;
+            const oldStartPos = document.getElementById(`element${m[oldR][oldC]}`);
+            oldStartPos.style.backgroundColor = '#3EC1D3';
+            oldStartPos.textContent = '';
+        }
+        newStartPos.style.backgroundColor = '#FF165D';
+        newStartPos.textContent = 'S';
+        setStartPosition([r, c]);
+    };
+
+    const changeFinalPos = ([ r, c ]) => {
+        const newFinalPos = document.getElementById(`element${m[r][c]}`);
+        if(finalPosition) {
+            const [ oldR, oldC ] = finalPosition;
+            const oldFinalPos = document.getElementById(`element${m[oldR][oldC]}`);
+            oldFinalPos.style.backgroundColor = '#3EC1D3';
+            oldFinalPos.textContent = '';
+        }
+        newFinalPos.style.backgroundColor = '#FF165D';
+        newFinalPos.textContent = 'E';
+        setFinalPosition([r, c]);
+    };
 
     const searchAnimation = () => {
         const search = {
-            breadth: () => breadthFirstSearchFrames(55, 3, 7),
+            breadth: () => breadthFirstSearchFrames(startPosition, finalPosition),
         };
         const frames = search[props.search.split(' ')[0]]();
         let delay = 0;

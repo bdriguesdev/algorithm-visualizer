@@ -9,7 +9,6 @@ const Header = () => {
     const [ isSearchMenuOpen, setIsSearchMenuOpen ] = useState(false);
 
     useEffect(() => {
-        console.log('here');
         const lines = document.querySelectorAll('.logo svg line');
         const tl = anime.timeline({ easing: 'easeInOutSine', direction: 'normal', delay: 200 });
         tl

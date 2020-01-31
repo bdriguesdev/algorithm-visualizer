@@ -17,15 +17,13 @@ const bgColorFrame = (x, duration, backgroundColor) => {
     }
 }
 
-export const breadthFirstSearchFrames = (target, tr, tc) => {
+export const breadthFirstSearchFrames = ([sr, sc], [tr, tc]) => {
     let frames = [];
     let reachedEnd = false;
     const prev = m.map(row => {
         row = row.map(() => null);
         return row
     });
-    const sr = 0; 
-    const sc = 0; 
     const rq = [];
     const cq = [];
     const visited = m.map(row => {
@@ -51,8 +49,8 @@ export const breadthFirstSearchFrames = (target, tr, tc) => {
             rq.push(rr);
             cq.push(cc);
             visited[rr][cc] = true;
-            frames.push(bgColorFrame(m[rr][cc], 150, '#FF9A00'));
-            if(m[rr][cc] === target) {
+            frames.push(bgColorFrame(m[rr][cc], 50, '#FF9A00'));
+            if(m[rr][cc] === m[tr][tc]) {
                 reachedEnd = true;
                 break;
             }
@@ -63,7 +61,7 @@ export const breadthFirstSearchFrames = (target, tr, tc) => {
     rq.push(sr);
     cq.push(sc);
     visited[sr][sc] = true;
-    frames.push(bgColorFrame(m[sr][sc], 150, '#FF9A00'));
+    frames.push(bgColorFrame(m[sr][sc], 50, '#FF9A00'));
     while(rq.length > 0) {
         const r = rq.shift();
         const c = cq.shift();
@@ -83,9 +81,9 @@ export const breadthFirstSearchFrames = (target, tr, tc) => {
             path.push(x);
         }
         path.reverse();
-        if(path[0][0] === 0 && path[0][1] === 0) {
+        if(path[0][0] === sr && path[0][1] === sc) {
             path.forEach(pos => {
-                frames.push(bgColorFrame(m[pos[0]][pos[1]], 150, '#FF165D'));
+                frames.push(bgColorFrame(m[pos[0]][pos[1]], 50, '#FF165D'));
             })
             frames.push(bgColorFrame(m[tr][tc], 150, '#FF165D'));
             return frames;
