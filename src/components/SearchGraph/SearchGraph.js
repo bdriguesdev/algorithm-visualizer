@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import anime from 'animejs';
 
 import './SearchGraph.scss';
-import { m1, breadthFirstSearchFrames } from '../../utils/search';
+import { m1, breadthFirstSearchFrames, depthFirstSearchFrames } from '../../utils/search';
 import { randomValue } from '../../utils/utils';
 
 const SearchGraph = props => {
@@ -65,6 +65,7 @@ const SearchGraph = props => {
     const searchAnimation = () => {
         const search = {
             breadth: () => breadthFirstSearchFrames(grid, startPosition, finalPosition),
+            depth: () => depthFirstSearchFrames(grid, startPosition, finalPosition)
         };
         const frames = search[props.search.split(' ')[0]]();
         let delay = 0;
@@ -168,7 +169,7 @@ const SearchGraph = props => {
                                     row.map((element, column) => {
                                         return (
                                             <div 
-                                                key={element} 
+                                                key={`${element}${column}`}
                                                 style={element === '#'? { width: gridWidth + 'px', height: gridWidth + 'px', backgroundColor: '#000' }: { width: gridWidth + 'px', height: gridWidth + 'px' }} 
                                                 className="searchElement" id={`r${index}c${column}`}
                                                 onDragEnter={dragEnter}

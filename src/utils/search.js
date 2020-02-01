@@ -87,3 +87,50 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     }
     return frames;
 };
+
+export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
+    let frames = [];
+    const dr = [-1, +1, 0, 0];
+    const dc = [0, 0, +1, -1];
+    const visited = m.map(row => {
+        row = row.map(() => null);
+        return row;
+    });
+    let reachedEnd = false;
+    let path = [];
+    let antiInfinte = 0;
+    const getNodes = (r, c) => {
+        let nodes = [];
+        for(let x = 0; x < 4; x++) {
+            const rr = r + dr[x];
+            const cc = c + dc[x];
+            
+            if(rr < 0 || cc < 0) continue;
+            else if(rr >= m.length || cc >= m[0].length) continue;
+            else if(visited[rr][cc]) continue;
+            nodes.push([rr, cc]);
+        }
+        return nodes;
+    };
+    const dfs = (r, c) => {
+        antiInfinte++;
+        if(antiInfinte > 1000) {
+            console.log('infinite');
+            return;
+        }
+        frames.push(bgColorFrame(`r${r}c${c}`, 50, '#FF9A00'));
+        visited[r][c] = true;
+        const nodes = getNodes(r, c);
+        for(let y = 0; y < nodes.length; y++) {
+            if(nodes[y][0] === tr && nodes[y][1] === tc) {
+                path.push([nodes[y][0], nodes[y][1]]);
+                reachedEnd = true;
+            }
+            if(reachedEnd) break;
+            if(!visited[nodes[y][0]][nodes[y][1]]) dfs(nodes[y][0], nodes[y][1]);
+        }
+        path.push([r, c]);
+    };
+    dfs(sr, sc);
+    return frames;
+};

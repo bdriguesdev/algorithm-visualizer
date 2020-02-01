@@ -37,6 +37,9 @@ function App() {
             <Route path='/search/breadth'>
               <Search searchName="breadth first" time="v + e" />
             </Route>
+            <Route path='/search/depth'>
+              <Search searchName="depth first" time="v + e" />
+            </Route>
           </Switch>
       </div>
     </Router>
