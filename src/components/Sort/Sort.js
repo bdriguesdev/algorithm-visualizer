@@ -41,7 +41,7 @@ const Sort = props => {
                     </div>
                 </div>
             </div>
-            <SortGraph sort={props.sortName} array={array} setArray={setArray} />
+            <SortGraph sort={props.sortName} array={array} setArray={setArray} color={color} />
         </section>
     );
 };

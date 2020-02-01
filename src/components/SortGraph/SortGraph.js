@@ -56,6 +56,7 @@ const SortGraph = props => {
         return {
             height: height + 'px',
             width: barWidth,
+            backgroundColor: props.color
         };
     };
 
