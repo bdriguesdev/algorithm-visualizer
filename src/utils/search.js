@@ -72,10 +72,7 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     
     //path
     let path = [];
-    let antiInfinte = 0;
     for(let x = [tr, tc]; x !== null; x = prev[x[0]][x[1]]) {
-        antiInfinte++;
-        if(antiInfinte > 1000) break;
         path.push(x);
     }
     path.reverse();
@@ -96,9 +93,11 @@ export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
         row = row.map(() => null);
         return row;
     });
+    const prev = m.map(row => {
+        row = row.map(() => null);
+        return row
+    });
     let reachedEnd = false;
-    let path = [];
-    let antiInfinte = 0;
     const getNodes = (r, c) => {
         let nodes = [];
         for(let x = 0; x < 4; x++) {
@@ -108,29 +107,32 @@ export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
             if(rr < 0 || cc < 0) continue;
             else if(rr >= m.length || cc >= m[0].length) continue;
             else if(visited[rr][cc]) continue;
+            else if(m[rr][cc] === '#') continue;
             nodes.push([rr, cc]);
+            prev[rr][cc] = [r, c];
         }
         return nodes;
     };
     const dfs = (r, c) => {
-        antiInfinte++;
-        if(antiInfinte > 1000) {
-            console.log('infinite');
-            return;
-        }
         frames.push(bgColorFrame(`r${r}c${c}`, 50, '#FF9A00'));
         visited[r][c] = true;
         const nodes = getNodes(r, c);
         for(let y = 0; y < nodes.length; y++) {
             if(nodes[y][0] === tr && nodes[y][1] === tc) {
-                path.push([nodes[y][0], nodes[y][1]]);
                 reachedEnd = true;
             }
             if(reachedEnd) break;
             if(!visited[nodes[y][0]][nodes[y][1]]) dfs(nodes[y][0], nodes[y][1]);
         }
-        path.push([r, c]);
     };
     dfs(sr, sc);
+    //path
+    let path = [];
+    for(let x = [tr, tc]; x !== null; x = prev[x[0]][x[1]]) {
+        path.push(x);
+    }
+    path.forEach(([r, c]) => {
+        frames.push(bgColorFrame(`r${r}c${c}`, 50, '#FF165D'));
+    });
     return frames;
 };
