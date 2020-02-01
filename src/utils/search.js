@@ -87,8 +87,8 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
 
 export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     let frames = [];
-    const dr = [-1, +1, 0, 0];
-    const dc = [0, 0, +1, -1];
+    const dr = [-1, 0, +1, 0];
+    const dc = [0, +1, 0, -1];
     const visited = m.map(row => {
         row = row.map(() => null);
         return row;

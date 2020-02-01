@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 
 import './Sort.scss';
 import SortGraph from '../SortGraph/SortGraph';
+import ColorSelector from '../ColorSelector/ColorSelector';
 
 const Sort = props => {
     const [ array, setArray ] = useState(null);
+    const [ color, setColor ] = useState('#3EC1D3')
 
     return (
         <section className="sort">
@@ -12,7 +14,7 @@ const Sort = props => {
                 <h2>{ props.sortName } sort</h2>
                 <form className="sortForm">
                     <div className="inputContainer">
-                        <input type="text" id="color"/><label htmlFor="color">bars color</label><br />
+                        <ColorSelector color={color} setColor={setColor} colors={['#3EC1D3', '#FF9A00', '#FF165D']} />
                     </div>
                     <div className="inputContainer">
                         <input type="text" id="arraySize" placeholder="2-30" /><label htmlFor="arraySize">array size</label><br />
