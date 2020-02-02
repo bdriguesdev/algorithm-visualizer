@@ -301,3 +301,77 @@ export const selectionSortFramesTest = arr => {
     addFramesToTimeline(lineFrames, valueFrames, boxFrames);
     return sortTimeline;
 };
+
+export const heapSortFramesTest = arr => {
+    //preparing frames array
+    createEmptyFrames(arr.length);
+    let delay = 0;
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+
+    const heapify = (index, size) => {
+        const left = index * 2 + 1;
+        const right = index * 2 + 2;
+        let max = index;
+
+        valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[index][1], duration: 100, color: '#FFF', delay });
+        valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[index][1], duration: 100, backgroundColor: '#FF9A00', delay });
+        delay += 100;
+
+        if(right < size && arrWithInitialIndex[right][0] > arrWithInitialIndex[max][0]) {
+            max = right;
+        }
+        if(left < size && arrWithInitialIndex[left][0] > arrWithInitialIndex[max][0]) {
+            max = left;
+        }
+        if(max !== index) {
+            const swap = arrWithInitialIndex[max];
+            // 
+            boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[max][1], duration: 150, newIndex: index, delay });
+            boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[index][1], duration: 150, newIndex: max, delay });
+            delay += 150;
+
+            arrWithInitialIndex[max] = arrWithInitialIndex[index];
+            arrWithInitialIndex[index] = swap;
+
+            heapify(max, size);
+        } else {
+            valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[index][1], duration: 100, color: '#000', delay });
+            valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[index][1], duration: 100, backgroundColor: '#FFF', delay });
+            delay += 100;
+        }
+    };
+    //create a max heap with the array
+    for(let x = Math.floor(arr.length / 2); x >= 0; x--) {
+        heapify(x, arr.length);
+    }
+    // extract the sorted arr
+    for(let x = arr.length - 1; x > 0; x--) {
+        const swap = arrWithInitialIndex[0]
+
+        valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[0][1], duration: 200, color: '#FFF', delay });
+        valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[0][1], duration: 200, backgroundColor: '#3EC1D3', delay });
+        delay += 200;
+
+        boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[0][1], duration: 150, newIndex: x, delay });
+        boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[x][1], duration: 150, newIndex: 0, delay });
+        delay += 150;
+
+        arrWithInitialIndex[0] = arrWithInitialIndex[x];
+        arrWithInitialIndex[x] = swap;
+
+        valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[x][1], duration: 50, color: '#FFF', delay });
+        valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[x][1], duration: 50, backgroundColor: '#FF165D', delay });
+        delay += 50;
+
+        heapify(0, x);
+    }
+    valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[0][1], duration: 50, color: '#FFF', delay });
+    valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[0][1], duration: 50, backgroundColor: '#FF165D', delay });
+    delay += 50;
+
+    //here create a timeline and return it
+    addFramesToTimeline(lineFrames, valueFrames, boxFrames);
+    return sortTimeline;
+};
