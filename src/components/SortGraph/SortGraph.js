@@ -10,6 +10,7 @@ const SortGraph = props => {
     const [ minValue, setMinValue ] = useState(null);
     const [ maxValue, setMaxValue ] = useState(null);
     const [ paused, setPaused ] = useState(false);
+    const [ timeline, setTimeline ] = useState(null);
     const [ animationInProgress, setAnimationInProgress ] = useState(false);
 
     useSort(props.sort);
@@ -85,6 +86,7 @@ const SortGraph = props => {
         let delay = 0;
         const timeline = insertionSortFramesTest(array);
         console.log('here');
+        setTimeline(timeline);
         timeline.play();
         console.log('play O.O');
         // frames.forEach((frame, index) => {
@@ -186,10 +188,20 @@ const SortGraph = props => {
     const handleStart = () => {
         if(!animationInProgress) {
             setAnimationInProgress(true);
-            resetAnimation(props.sort);
-            sortAnimation();
+            if(timeline) timeline.play();
+            else {
+                sortAnimation();
+                resetAnimation(props.sort);
+            }
         }
-    }
+    };
+
+    const handlePause = () => {
+        if(animationInProgress) {
+            setAnimationInProgress(false);
+        }
+        timeline.pause();
+    };
 
     return (
         <div className="sortGraph">
@@ -208,9 +220,9 @@ const SortGraph = props => {
                 }
             </div>  
             <div className="sortButtons">
-                <button style={animationInProgress? { cursor: 'no-drop', color: 'rgba(255,255,255,0.4)' }: {}} onClick={handleStart} className="button btnPink" >START</button>
-                {/* <button onClick={() => resetAnimation(props.sort)} className="button btnYellow">RESET</button>
-                <button className="button btnBlue">PAUSE</button> */}
+                <button style={animationInProgress? { cursor: 'no-drop', color: 'rgba(255,255,255,0.4)' }: {}} onClick={handleStart} className="button btnPink" >PLAY</button>
+                <button onClick={() => resetAnimation(props.sort)} className="button btnYellow">RESET</button>
+                <button onClick={handlePause} className="button btnBlue">PAUSE</button>
             </div>
         </div>
     );

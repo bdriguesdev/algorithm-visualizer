@@ -15,13 +15,13 @@ const sortTimeline = anime.timeline();
 
 const addFramesToTimeline = (lineFrames, valueFrames, boxFrames) => {
     lineFrames.forEach(frame => {
-        if(frame) sortTimeline.add(frame);
+        if(frame) sortTimeline.add(frame, 0);
     });
     valueFrames.forEach(frame => {
-        if(frame) sortTimeline.add(frame);
+        if(frame) sortTimeline.add(frame, 0);
     });
     boxFrames.forEach(frame => {
-        if(frame) sortTimeline.add(frame);
+        if(frame) sortTimeline.add(frame, 0);
     });
 };
 
@@ -33,18 +33,26 @@ const calcNewPosition = (index, length) => {
     };
 };
 
+let delayTest = []
+let count = 1;
+
 const moveFrame = (frames, frame, id) => {
     const leftPos = calcNewPosition(frame.newIndex, 18).left;
     if(frames[id]) {
         let prevDelay = 0
-        frames[id].left.forEach(({ delay }) =>  {
-            prevDelay += delay;
+        frames[id].left.forEach(({ delay, duration }) =>  {
+            prevDelay += delay + duration;
         });
         frames[id].left.push({
             value: leftPos,
             duration: frame.duration,
             delay: frame.delay - prevDelay
         });
+        if(count % 2 === 0 && count !== 0) {
+            delayTest[delayTest.length - 1].push({id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay });
+        } else {
+            delayTest.push([{id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay}]);
+        }
     } else {
         frames[id] = {};
         frames[id].left = [{
@@ -52,7 +60,13 @@ const moveFrame = (frames, frame, id) => {
             duration: frame.duration,
             delay: frame.delay
         }];
+        if(count % 2 === 0 && count !== 0) {
+            delayTest[delayTest.length - 1].push({id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay});
+        } else {
+            delayTest.push([{id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay}]);
+        }
     }
+    count++;
     return frames;
 };
 
@@ -92,10 +106,15 @@ const newcolorFrame = (frames, frame, id) => {
     } else {
         if(!frames[id]) frames[id] = {};
         frames[id].color = [{
-                value: frame.color,
-                duration: frame.duration,
-                delay: frame.delay
+            value: '#000',
+            duration: 1,
+            delay: 0
         }];
+        frames[id].color.push({
+            value: frame.color,
+            duration: frame.duration,
+            delay: frame.delay
+        });
     }
     return frames;
 };
@@ -118,7 +137,6 @@ const createFrame = (frames, frame) => {
     if(target) {
         frames[id].targets = target;
         frames[id].easing = 'easeInOutSine';
-        frames[id].duration = frame.duration;
         frames[id].direction = 'normal';
     }
     return frames;
@@ -137,14 +155,12 @@ export const insertionSortFramesTest = arr => {
     const arrWithInitialIndex = arr.map((value, index) => {
         return [value, index];
     });
-    // frames.push(colorFrame('#FFF', 0, 150, '#FF165D'));
     valueFrames = createFrame(valueFrames, { type: 'color',  id: 0, duration: 150, color: '#FFF', delay });
     valueFrames = createFrame(valueFrames, {  type: 'bg', id: 0, duration: 150, backgroundColor: '#FF165D', delay });
     delay += 150;
     for(let x = 1; x < arr.length; x++) {
         let value = arrWithInitialIndex[x];
         //change color of elementValue
-        // frames.push(colorFrame('#FFF', x, 150, '#FF9A00'));
         valueFrames = createFrame(valueFrames, {  type: 'color', id: x, duration: 150, color: '#FFF', delay });
         valueFrames = createFrame(valueFrames, {  type: 'bg', id: x, duration: 150, backgroundColor: '#FF9A00', delay });
         delay += 150;
@@ -152,30 +168,19 @@ export const insertionSortFramesTest = arr => {
         while(y >= 0 && arrWithInitialIndex[y][0] > value[0]) {
             arrWithInitialIndex[y + 1] = arrWithInitialIndex[y];
             //change position of x and y
-            // frames.push({
-            //     type: 'move',
-            //     duration: 250,
-            //     xNewPos: y,
-            //     xId: value[1],
-            //     yNewPos: y + 1,
-            //     yId: arrWithInitialIndex[y][1]
-            // });
-            boxFrames = createFrame(boxFrames, {  type: 'move', id: value[1], duration: 200, newIndex: y, delay });
-            boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[y][1], duration: 200, newIndex: y + 1, delay });
-            delay += 200;
+            boxFrames = createFrame(boxFrames, {  type: 'move', id: value[1], duration: 250, newIndex: y, delay });
+            boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[y][1], duration: 250, newIndex: y + 1, delay });
+            delay += 250;
             y--;
         }
         arrWithInitialIndex[y + 1] = value;
         //color to elementValue back to normal
-        // frames.push(colorFrame('#FFF', x, 150, '#FF165D'));
         valueFrames = createFrame(valueFrames, {  type: 'color', id: x, duration: 150, color: '#FFF', delay });
         valueFrames = createFrame(valueFrames, {  type: 'bg', id: x, duration: 150, backgroundColor: '#FF165D', delay });
         delay += 150;
     }
 
-
     //here create a timeline and return it
     addFramesToTimeline(lineFrames, valueFrames, boxFrames);
-    console.log(lineFrames, valueFrames, boxFrames);
     return sortTimeline; 
 };
