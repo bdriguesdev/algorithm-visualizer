@@ -1,17 +1,20 @@
 import anime from 'animejs';
 
-const colorFrame = (color, x, duration, backgroundColor=null, y=null, ) => {
-    return {
-        type: 'color',
-        x,
-        y,
-        duration,
-        color,
-        backgroundColor
+const sortTimeline = anime.timeline();
+let lineFrames = [];
+let valueFrames = [];
+let boxFrames = [];
+
+const createEmptyFrames = length => {
+    lineFrames = [];
+    valueFrames = [];
+    boxFrames = [];
+    for(let x = 0; x < length; x++) {
+        lineFrames.push(null);
+        valueFrames.push(null);
+        boxFrames.push(null);
     }
 };
-
-const sortTimeline = anime.timeline();
 
 const addFramesToTimeline = (lineFrames, valueFrames, boxFrames) => {
     lineFrames.forEach(frame => {
@@ -33,9 +36,6 @@ const calcNewPosition = (index, length) => {
     };
 };
 
-let delayTest = []
-let count = 1;
-
 const moveFrame = (frames, frame, id) => {
     const leftPos = calcNewPosition(frame.newIndex, 18).left;
     if(frames[id]) {
@@ -48,11 +48,6 @@ const moveFrame = (frames, frame, id) => {
             duration: frame.duration,
             delay: frame.delay - prevDelay
         });
-        if(count % 2 === 0 && count !== 0) {
-            delayTest[delayTest.length - 1].push({id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay });
-        } else {
-            delayTest.push([{id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay}]);
-        }
     } else {
         frames[id] = {};
         frames[id].left = [{
@@ -60,21 +55,15 @@ const moveFrame = (frames, frame, id) => {
             duration: frame.duration,
             delay: frame.delay
         }];
-        if(count % 2 === 0 && count !== 0) {
-            delayTest[delayTest.length - 1].push({id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay});
-        } else {
-            delayTest.push([{id: frame.id, value: leftPos, duration: frame.duration, delay: frame.delay}]);
-        }
     }
-    count++;
     return frames;
 };
 
 const bgFrame = (frames, frame, id) => {
     if(frames[id] && frames[id].backgroundColor) {
         let prevDelay = 0
-        frames[id].backgroundColor.forEach(({ delay }) =>  {
-            prevDelay += delay;
+        frames[id].backgroundColor.forEach(({ delay, duration }) =>  {
+            prevDelay += delay + duration;
         });
         frames[id].backgroundColor.push({
             value: frame.backgroundColor,
@@ -95,8 +84,8 @@ const bgFrame = (frames, frame, id) => {
 const newcolorFrame = (frames, frame, id) => {
     if(frames[id] && frames[id].color) {
         let prevDelay = 0
-        frames[id].color.forEach(({ delay }) =>  {
-            prevDelay += delay;
+        frames[id].color.forEach(({ delay, duration }) =>  {
+            prevDelay += delay + duration;
         });
         frames[id].color.push({
             value: frame.color,
@@ -143,21 +132,17 @@ const createFrame = (frames, frame) => {
 };
 
 export const insertionSortFramesTest = arr => {
-    let lineFrames = [];
-    let valueFrames = [];
-    let boxFrames = [];
+    //creating array with arr length filled with null
+    createEmptyFrames(arr.length);
     let delay = 0;
-    for(let y = 0; y < arr.length; y++) {
-        lineFrames.push(null);
-        valueFrames.push(null);
-        boxFrames.push(null);
-    }
     const arrWithInitialIndex = arr.map((value, index) => {
         return [value, index];
     });
+
     valueFrames = createFrame(valueFrames, { type: 'color',  id: 0, duration: 150, color: '#FFF', delay });
     valueFrames = createFrame(valueFrames, {  type: 'bg', id: 0, duration: 150, backgroundColor: '#FF165D', delay });
     delay += 150;
+
     for(let x = 1; x < arr.length; x++) {
         let value = arrWithInitialIndex[x];
         //change color of elementValue
@@ -165,6 +150,7 @@ export const insertionSortFramesTest = arr => {
         valueFrames = createFrame(valueFrames, {  type: 'bg', id: x, duration: 150, backgroundColor: '#FF9A00', delay });
         delay += 150;
         let y = x - 1;
+
         while(y >= 0 && arrWithInitialIndex[y][0] > value[0]) {
             arrWithInitialIndex[y + 1] = arrWithInitialIndex[y];
             //change position of x and y
@@ -173,6 +159,7 @@ export const insertionSortFramesTest = arr => {
             delay += 250;
             y--;
         }
+
         arrWithInitialIndex[y + 1] = value;
         //color to elementValue back to normal
         valueFrames = createFrame(valueFrames, {  type: 'color', id: x, duration: 150, color: '#FFF', delay });
@@ -183,4 +170,66 @@ export const insertionSortFramesTest = arr => {
     //here create a timeline and return it
     addFramesToTimeline(lineFrames, valueFrames, boxFrames);
     return sortTimeline; 
+};
+
+export const bubbleSortFramesTest = arr => {
+    //creating array with arr length filled with null
+    createEmptyFrames(arr.length);
+    let delay = 0;
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+    for(let x = 1; x < arr.length; x++) {
+        let swap = false;
+        let stopIndex = 0;
+
+        for(let y = 0; y < arr.length - x; y++) {
+            // change color of the two elements of the next conditional(if)
+            valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[y][1], duration: 150, color: '#FFF', delay });
+            valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[y][1], duration: 150, backgroundColor: '#FF9A00', delay });
+            valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[y + 1][1], duration: 150, color: '#FFF', delay });
+            valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[y + 1][1], duration: 150, backgroundColor: '#FF9A00', delay });
+            delay += 150;
+
+            if(arrWithInitialIndex[y][0] > arrWithInitialIndex[y + 1][0]) {
+                swap = true;
+                const yValue = arrWithInitialIndex[y];
+                // if the first element is bigger then the second one, both will change the position
+                boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[y][1], duration: 150, newIndex: y + 1, delay });
+                boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[y + 1][1], duration: 150, newIndex: y, delay });
+                delay += 150;
+
+                arrWithInitialIndex[y] = arrWithInitialIndex[y + 1];
+                arrWithInitialIndex[y + 1] = yValue;
+            }
+
+            // small number change the color/bg back to normal
+            valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[y][1], duration: 150, color: '#000', delay });
+            valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[y][1], duration: 150, backgroundColor: '#FFF', delay });
+            delay += 150;
+            stopIndex = y + 1;
+        }
+        // this element is in the right position
+        valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[stopIndex][1], duration: 150, color: '#FFF', delay });
+        valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[stopIndex][1], duration: 150, backgroundColor: '#FF165D', delay });
+        delay += 150;
+
+        if(!swap) {
+            for(let z = stopIndex - 1; z > 0; z--) {
+                // this element is in the right position
+                valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[z][1], duration: 150, color: '#FFF', delay });
+                valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[z][1], duration: 150, backgroundColor: '#FF165D', delay });
+                delay += 150;
+            }
+            break;
+        }
+    }
+    // this element is in the right position
+    valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[0][1], duration: 150, color: '#FFF', delay });
+    valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[0][1], duration: 150, backgroundColor: '#FF165D', delay });
+    delay += 150;
+
+    //here create a timeline and return it
+    addFramesToTimeline(lineFrames, valueFrames, boxFrames);
+    return sortTimeline;
 };
