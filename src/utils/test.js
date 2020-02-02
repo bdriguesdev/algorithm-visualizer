@@ -132,7 +132,7 @@ const createFrame = (frames, frame) => {
 };
 
 export const insertionSortFramesTest = arr => {
-    //creating array with arr length filled with null
+    //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
     const arrWithInitialIndex = arr.map((value, index) => {
@@ -173,7 +173,7 @@ export const insertionSortFramesTest = arr => {
 };
 
 export const bubbleSortFramesTest = arr => {
-    //creating array with arr length filled with null
+    //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
     const arrWithInitialIndex = arr.map((value, index) => {
@@ -228,6 +228,74 @@ export const bubbleSortFramesTest = arr => {
     valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[0][1], duration: 150, color: '#FFF', delay });
     valueFrames = createFrame(valueFrames, {  type: 'bg', id: arrWithInitialIndex[0][1], duration: 150, backgroundColor: '#FF165D', delay });
     delay += 150;
+
+    //here create a timeline and return it
+    addFramesToTimeline(lineFrames, valueFrames, boxFrames);
+    return sortTimeline;
+};
+
+export const selectionSortFramesTest = arr => {
+    //preparing frames array
+    createEmptyFrames(arr.length);
+    let delay = 0;
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+    for(let x = 0; x < arr.length - 1; x++) {
+        let minIndex = x;
+        // frames.push(colorFrame('#FFF', arrWithInitialIndex[minIndex][1], 150, '#3EC1D3'));
+        valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[minIndex][1], duration: 150, color: '#FFF', delay });
+        valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[minIndex][1], duration: 150, backgroundColor: '#3EC1D3', delay });
+        delay += 150;
+
+        for(let y = x + 1; y < arr.length; y++) {
+            // frames.push(colorFrame('#FFF', arrWithInitialIndex[y][1], 150, '#FF9A00'));
+            valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[y][1], duration: 150, color: '#FFF', delay });
+            valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[y][1], duration: 150, backgroundColor: '#FF9A00', delay });
+            delay += 150;
+
+            if(arrWithInitialIndex[y][0] < arrWithInitialIndex[minIndex][0]) {
+                // frames.push(colorFrame('#000', arrWithInitialIndex[minIndex][1], 50, '#FFF'));
+                valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[minIndex][1], duration: 50, color: '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[minIndex][1], duration: 50, backgroundColor: '#FFF', delay });
+                delay += 50;
+                minIndex = y;
+                // frames.push(colorFrame('#FFF', arrWithInitialIndex[y][1], 50, '#3EC1D3'));
+                valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[y][1], duration: 50, color: '#FFF', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[y][1], duration: 50, backgroundColor: '#3EC1D3', delay });
+                delay += 50;
+            } else if(y !== minIndex) {
+                // frames.push(colorFrame('#000', arrWithInitialIndex[y][1], 100, '#FFF'));
+                valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[y][1], duration: 100, color: '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[y][1], duration: 100, backgroundColor: '#FFF', delay });
+                delay += 100;
+            }
+        }
+        // frames.push({
+        //     type: 'move',
+        //     duration: 150,
+        //     xNewPos: minIndex,
+        //     xId: arrWithInitialIndex[x][1],
+        //     yNewPos: x,
+        //     yId: arrWithInitialIndex[minIndex][1]
+        // });
+        boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[x][1], duration: 150, newIndex: minIndex, delay });
+        boxFrames = createFrame(boxFrames, {  type: 'move', id: arrWithInitialIndex[minIndex][1], duration: 150, newIndex: x, delay });
+        delay += 150;
+
+        // frames.push(colorFrame('#FFF', arrWithInitialIndex[minIndex][1], 50, '#FF165D'));
+        valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[minIndex][1], duration: 50, color: '#FFF', delay });
+        valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[minIndex][1], duration: 50, backgroundColor: '#FF165D', delay });
+        delay += 50;
+
+        const xValue = arrWithInitialIndex[x];
+        arrWithInitialIndex[x] = arrWithInitialIndex[minIndex];
+        arrWithInitialIndex[minIndex] = xValue;
+    }
+    // frames.push(colorFrame('#FFF', arrWithInitialIndex[arr.length - 1][1], 50, '#FF165D'));
+    valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[arr.length - 1][1], duration: 50, color: '#FFF', delay });
+    valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[arr.length - 1][1], duration: 50, backgroundColor: '#FF165D', delay });
+    delay += 50;
 
     //here create a timeline and return it
     addFramesToTimeline(lineFrames, valueFrames, boxFrames);

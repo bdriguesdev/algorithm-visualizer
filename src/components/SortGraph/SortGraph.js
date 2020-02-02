@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import anime from 'animejs';
 
 import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames, quickSortFrames } from '../../utils/sort'
-import { insertionSortFramesTest, bubbleSortFramesTest } from '../../utils/test';
+import { insertionSortFramesTest, bubbleSortFramesTest, selectionSortFramesTest } from '../../utils/test';
 import './SortGraph.scss';
 
 const SortGraph = props => {
@@ -77,13 +77,13 @@ const SortGraph = props => {
         const sort = {
             insertion: () => insertionSortFramesTest(array),
             bubble: () => bubbleSortFramesTest(array),
-            selection: () => selectionSortFrames(array),
+            selection: () => selectionSortFramesTest(array),
             heap: () => heapSortFrames(array),
             merge: () => mergeSortFrames(array),
             quick: () => quickSortFrames(array)
         };
-        let frames = sort[props.sort]();
-        let delay = 0;
+        // let frames = sort[props.sort]();
+        // let delay = 0;
         const timeline = sort[props.sort]();
         console.log('here');
         setTimeline(timeline);
