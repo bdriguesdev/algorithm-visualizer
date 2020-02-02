@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import anime from 'animejs';
 
 import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames, quickSortFrames } from '../../utils/sort'
+import { insertionSortFramesTest } from '../../utils/test';
 import './SortGraph.scss';
 
 const SortGraph = props => {
     const [ array, setArray ] = useState([]);
     const [ minValue, setMinValue ] = useState(null);
     const [ maxValue, setMaxValue ] = useState(null);
+    const [ paused, setPaused ] = useState(false);
     const [ animationInProgress, setAnimationInProgress ] = useState(false);
 
     useSort(props.sort);
@@ -70,6 +72,7 @@ const SortGraph = props => {
     }
 
     const sortAnimation = () => {
+        // console.log(insertionSortFramesTest(array));
         const sort = {
             insertion: () => insertionSortFrames(array),
             bubble: () => bubbleSortFrames(array),
@@ -78,79 +81,83 @@ const SortGraph = props => {
             merge: () => mergeSortFrames(array),
             quick: () => quickSortFrames(array)
         };
-        const frames = sort[props.sort]();
+        let frames = sort[props.sort]();
         let delay = 0;
-        frames.forEach((frame, index) => {
-            if(frame.type === 'color') {
-                setTimeout(() => {
-                    anime({
-                        targets: '#value' + frame.x,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        color: frame.color,
-                        backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
-                    });
-                    if(frame.y) {
-                        anime({
-                            targets: '#value' + frame.y,
-                            direction: 'normal',
-                            duration: frame.duration,
-                            easing: 'easeInOutSine',
-                            color: frame.color,
-                            backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
-                        });
-                    }
-                }, delay);
-            } else if(frame.type === 'move') {
-                setTimeout(() => {
-                    let x = document.getElementById('element'+frame.xId);
-                    let y = document.getElementById('element'+frame.yId);
-                    const newXLeft = calcLeftValue(frame.xNewPos).left;
-                    const newYLeft = calcLeftValue(frame.yNewPos).left;
-                    anime({
-                        targets: x,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        left: newXLeft
-                    });
-                    anime({
-                        targets: y,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        left: newYLeft
-                    });
-                }, delay + 10);
-            } else if(frame.type === 'height') {
-                setTimeout(() => {
-                    let xLine = document.getElementById('line'+frame.xId);
-                    let xValue = document.getElementById('value'+frame.xId);
-                    const newHeight = defineElementHeight(frame.xHeight, 1).height;
-                    anime({
-                        targets: xLine,
-                        duration: frame.duration,
-                        height: newHeight,
-                        easing: 'easeInOutSine'
-                    });
-                    xValue.textContent = frame.xHeight;
-                    anime({
-                        targets: xValue,
-                        duration: 200,
-                        backgroundColor: frame.color,
-                        color: frame.color !== ''? '#FFF': '#000',
-                        easing: 'easeInOutSine'
-                    })
-                }, delay);
-            }
-            delay += frame.duration;
-            if(index === frames.length - 1) {
-                setTimeout(() => {
-                    setAnimationInProgress(false);
-                }, delay);
-            }
-        });
+        const timeline = insertionSortFramesTest(array);
+        console.log('here');
+        timeline.play();
+        console.log('play O.O');
+        // frames.forEach((frame, index) => {
+        //     if(frame.type === 'color') {
+        //         setTimeout(function() {
+        //             anime({
+        //                 targets: '#value' + frame.x,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 color: frame.color,
+        //                 backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
+        //             });
+        //             if(frame.y) {
+        //                 anime({
+        //                     targets: '#value' + frame.y,
+        //                     direction: 'normal',
+        //                     duration: frame.duration,
+        //                     easing: 'easeInOutSine',
+        //                     color: frame.color,
+        //                     backgroundColor: frame.backgroundColor? frame.backgroundColor: "" 
+        //                 });
+        //             }
+        //         }, delay);
+        //     } else if(frame.type === 'move') {
+        //         setTimeout(function() {
+        //             let x = document.getElementById('element'+frame.xId);
+        //             let y = document.getElementById('element'+frame.yId);
+        //             const newXLeft = calcLeftValue(frame.xNewPos).left;
+        //             const newYLeft = calcLeftValue(frame.yNewPos).left;
+        //             anime({
+        //                 targets: x,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 left: newXLeft
+        //             });
+        //             anime({
+        //                 targets: y,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 left: newYLeft
+        //             });
+        //         }, delay);
+        //     } else if(frame.type === 'height') {
+        //         setTimeout(function() {
+        //             let xLine = document.getElementById('line'+frame.xId);
+        //             let xValue = document.getElementById('value'+frame.xId);
+        //             const newHeight = defineElementHeight(frame.xHeight, 1).height;
+        //             anime({
+        //                 targets: xLine,
+        //                 duration: frame.duration,
+        //                 height: newHeight,
+        //                 easing: 'easeInOutSine'
+        //             });
+        //             xValue.textContent = frame.xHeight;
+        //             anime({
+        //                 targets: xValue,
+        //                 duration: 200,
+        //                 backgroundColor: frame.color,
+        //                 color: frame.color !== ''? '#FFF': '#000',
+        //                 easing: 'easeInOutSine'
+        //             }) 
+        //         }, delay);
+        //     }
+        //     delay += frame.duration;
+        //     if(index === frames.length - 1) {
+        //         setTimeout(() => {
+        //             setAnimationInProgress(false);
+        //         }, delay);
+        //     }
+        // });
     };
 
     const resetAnimation = sort => {
@@ -179,6 +186,7 @@ const SortGraph = props => {
     const handleStart = () => {
         if(!animationInProgress) {
             setAnimationInProgress(true);
+            resetAnimation(props.sort);
             sortAnimation();
         }
     }
@@ -198,11 +206,11 @@ const SortGraph = props => {
                         })
                     )
                 }
-            </div>
+            </div>  
             <div className="sortButtons">
                 <button style={animationInProgress? { cursor: 'no-drop', color: 'rgba(255,255,255,0.4)' }: {}} onClick={handleStart} className="button btnPink" >START</button>
-                <button onClick={() => resetAnimation(props.sort)} className="button btnYellow">RESET</button>
-                <button className="button btnBlue">PAUSE</button>
+                {/* <button onClick={() => resetAnimation(props.sort)} className="button btnYellow">RESET</button>
+                <button className="button btnBlue">PAUSE</button> */}
             </div>
         </div>
     );

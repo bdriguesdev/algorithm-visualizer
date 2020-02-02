@@ -1,3 +1,5 @@
+import anime from 'animejs';
+
 const colorFrame = (color, x, duration, backgroundColor=null, y=null, ) => {
     return {
         type: 'color',
@@ -7,7 +9,7 @@ const colorFrame = (color, x, duration, backgroundColor=null, y=null, ) => {
         color,
         backgroundColor
     }
-}
+};
 
 export const insertionSortFrames = arr => {
     let frames = [];
