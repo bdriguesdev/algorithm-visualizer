@@ -36,6 +36,15 @@ const calcNewPosition = (index, length) => {
     };
 };
 
+const elementHeight = value => {
+    const percentValue = 440 / 50;
+    const height = value * percentValue;
+
+    return {
+        height: height + 'px'
+    };
+};
+
 const moveFrame = (frames, frame, id) => {
     const leftPos = calcNewPosition(frame.newIndex, 18).left;
     if(frames[id]) {
@@ -108,6 +117,53 @@ const newcolorFrame = (frames, frame, id) => {
     return frames;
 };
 
+const heightFrame = (frames, frame, id) => {
+    const newHeight = elementHeight(frame.height).height;
+    if(frames[id]) {
+        let prevDelay = 0;
+        frames[id].height.forEach(({ delay, duration }) => {
+            prevDelay += delay + duration;
+        });
+        frames[id].height.push({
+            value: newHeight,
+            duration: frame.duration,
+            delay: frame.delay - prevDelay
+        });
+    } else {
+        frames[id] = {};
+        frames[id].height = [{
+            value: newHeight,
+            duration: frame.duration,
+            delay: frame.delay
+        }];
+    }
+    return frames;
+};
+
+const innerHTMLFrame = (frames, frame, id) => {
+    if(frames[id] && frames[id].innerHTML) {
+        let prevDelay = 0
+        frames[id].innerHTML.forEach(({ delay, duration }) =>  {
+            prevDelay += delay + duration;
+        });
+        frames[id].innerHTML.push({
+            value: frame.innerHTML,
+            duration: frame.duration,
+            delay: frame.delay - prevDelay,
+            round: 1
+        });
+    } else {
+        if(!frames[id]) frames[id] = {};
+        frames[id].innerHTML = [{
+            value: frame.innerHTML,
+            duration: frame.duration,
+            delay: frame.delay,
+            round: 1
+        }];
+    }
+    return frames;
+};
+
 const createFrame = (frames, frame) => {
     let target = null;
     const { id } = frame;
@@ -121,6 +177,12 @@ const createFrame = (frames, frame) => {
     } else if(frame.type === 'color') {
         if(!frames[id]) target = document.getElementById('value'+id);
         frames = newcolorFrame(frames, frame, id);
+    } else if(frame.type === 'height') {
+        if(!frames[id]) target = document.getElementById('line'+id);
+        frames = heightFrame(frames, frame, id);
+    } else if(frame.type === 'innerHTML') {
+        if(!frames[id]) target = document.getElementById('value'+id);
+        frames = innerHTMLFrame(frames, frame, id);
     }
     
     if(target) {
@@ -370,6 +432,156 @@ export const heapSortFramesTest = arr => {
     valueFrames = createFrame(valueFrames, { type: 'color',  id: arrWithInitialIndex[0][1], duration: 50, color: '#FFF', delay });
     valueFrames = createFrame(valueFrames, { type: 'bg', id: arrWithInitialIndex[0][1], duration: 50, backgroundColor: '#FF165D', delay });
     delay += 50;
+
+    //here create a timeline and return it
+    addFramesToTimeline(lineFrames, valueFrames, boxFrames);
+    return sortTimeline;
+};
+
+export const mergeSortFramesTest = arr => {
+    //preparing frames array
+    createEmptyFrames(arr.length);
+    let delay = 0;
+    const arrWithInitialIndex = arr.map((value, index) => {
+        return [value, index];
+    });
+    //merge two sorted arrays(subarrays of arrWithInitialIndex)
+    const merge = (left, middle, right) => {
+        let i = 0;
+        let j = 0
+        let k = left;
+        let lastMerge = left === 0 && right === arr.length - 1? true: false;
+
+        let leftArray = [];
+        for(let x = left; x <= middle; x++) {
+            leftArray.push(arrWithInitialIndex[x]);
+        }
+        let rightArray = [];
+        for(let y = middle + 1; y <= right; y++) {
+            rightArray.push(arrWithInitialIndex[y]);
+        }
+
+        while(i < leftArray.length && j < rightArray.length) {
+            if(leftArray[i][0] < rightArray[j][0]) {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF9A00', delay });
+                delay += 200;
+
+                if(arrWithInitialIndex[k][0] !== leftArray[i][0] && arrWithInitialIndex[k][1] !== leftArray[i][1]) {
+                    lineFrames = createFrame(lineFrames, { type: 'height', id: k, duration: 300, height: leftArray[i][0], delay });
+                    valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 300, color: lastMerge? '#FFF': '#000', delay });
+                    valueFrames = createFrame(valueFrames, { type: 'innerHTML', id: k, duration: 300, innerHTML: leftArray[i][0], delay });
+
+                    if(lastMerge) {
+                        valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 300, backgroundColor: '#FF165D', delay });
+                    }
+                    delay += 300;
+                } else if(lastMerge) {
+                    valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+                    valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF165D', delay });
+                    delay += 200;
+                }
+                arrWithInitialIndex[k] = leftArray[i];
+                i++;
+            } else {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF9A00', delay });
+                delay += 200;
+
+                if(arrWithInitialIndex[k][0] !== rightArray[j][0] && arrWithInitialIndex[k][1] !== rightArray[j][1]) {
+                    lineFrames = createFrame(lineFrames, { type: 'height', id: k, duration: 300, height: rightArray[j][0], delay });
+                    valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 300, color: lastMerge? '#FFF': '#000', delay });
+                    valueFrames = createFrame(valueFrames, { type: 'innerHTML', id: k, duration: 300, innerHTML: rightArray[j][0], delay });
+                    if(lastMerge) {
+                        valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 300, backgroundColor: '#FF165D', delay });
+                    }
+                    delay += 300;
+                } else if(lastMerge) {
+                    valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+                    valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF165D', delay });
+                    delay += 200;
+                }
+                arrWithInitialIndex[k] = rightArray[j];
+                j++;
+            }
+            if(!lastMerge) {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FFF', delay });
+                delay += 200;
+            }
+            k++;
+        }
+        
+        while(i < leftArray.length) {
+            valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+            valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF9A00', delay });
+            delay += 200;
+
+            if(arrWithInitialIndex[k][0] !== leftArray[i][0] && arrWithInitialIndex[k][1] !== leftArray[i][1]) {
+                lineFrames = createFrame(lineFrames, { type: 'height', id: k, duration: 300, height: leftArray[i][0], delay });
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 300, color: lastMerge? '#FFF': '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'innerHTML', id: k, duration: 300, innerHTML: leftArray[i][0], delay });
+
+                if(lastMerge) {
+                    valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 300, backgroundColor: '#FF165D', delay });
+                }
+                delay += 300;
+            } else if(lastMerge) {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF9A00', delay });
+                delay += 200;
+            }
+            arrWithInitialIndex[k] = leftArray[i];
+            if(!lastMerge)  {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FFF', delay });
+                delay += 200;
+            }
+            k++;
+            i++;
+        }
+        while(j < rightArray.length) {
+            valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+            valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF9A00', delay });
+            delay += 200;
+
+            if(arrWithInitialIndex[k][0] !== rightArray[j][0] && arrWithInitialIndex[k][1] !== rightArray[j][1]) {
+                lineFrames = createFrame(lineFrames, { type: 'height', id: k, duration: 300, height: rightArray[j][0], delay });
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 300, color: lastMerge? '#FFF': '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'innerHTML', id: k, duration: 300, innerHTML: rightArray[j][0], delay });
+
+                if(lastMerge) {
+                    valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 300, backgroundColor: '#FF165D', delay });
+                }
+                delay += 300;
+            } else if(lastMerge) {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#FFF', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FF165D', delay });
+                delay += 200;
+            }
+            arrWithInitialIndex[k] = rightArray[j];
+
+            if(!lastMerge) {
+                valueFrames = createFrame(valueFrames, { type: 'color', id: k, duration: 200, color: '#000', delay });
+                valueFrames = createFrame(valueFrames, { type: 'bg', id: k, duration: 200, backgroundColor: '#FFF', delay });
+                delay += 200;
+            }
+            k++;
+            j++;
+        }
+    };
+    //sort a array
+    const sort = (left, right) => {
+        if(left < right) {
+            const middle = Math.floor((left + right) / 2);
+
+            sort(left, middle);
+            sort(middle + 1, right);
+
+            merge(left, middle, right);
+        }
+    };
+    sort(0, arr.length - 1);
 
     //here create a timeline and return it
     addFramesToTimeline(lineFrames, valueFrames, boxFrames);
