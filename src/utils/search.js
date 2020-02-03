@@ -1,3 +1,5 @@
+import anime from 'animejs';
+
 export let m1 = [];
 let value = 0;
 for(let x = 0; x < 9; x++) {
@@ -6,7 +8,68 @@ for(let x = 0; x < 9; x++) {
         m1[x].push(y);
     }
     value += 16;
-}
+};
+
+let gridFrames = [];
+let searchTimeline = anime.timeline();
+
+const createEmptyFrames = (rlength, clength) => {
+    gridFrames = [];
+    for(let x = 0; x < rlength; x++) {
+        gridFrames.push([]);
+        for(let y = 0; y < clength; y++) {
+            gridFrames[x].push(null);
+        }
+    }
+};
+
+const addFramesToTimeline = (gridFrames) => {
+    gridFrames.forEach(row => {
+        row.forEach(frame => {
+            if(frame) searchTimeline.add(frame, 0);
+        });
+    });
+};
+
+const bgFrame = (frames, frame, r, c) => {
+    if(frames[r][c] && frames[r][c].backgroundColor) {
+        let prevDelay = 0
+        frames[r][c].backgroundColor.forEach(({ delay, duration }) =>  {
+            prevDelay += delay + duration;
+        });
+        frames[r][c].backgroundColor.push({
+            value: frame.backgroundColor,
+            duration: frame.duration,
+            delay: frame.delay - prevDelay
+        });
+    } else {
+        if(!frames[r][c]) frames[r][c] = {};
+        frames[r][c].backgroundColor = [{
+                value: frame.backgroundColor,
+                duration: frame.duration,
+                delay: frame.delay
+        }];
+    }
+    return frames;
+};
+
+const createFrame = (frames, frame) => {
+    let target = null;
+    const { id, gridId } = frame;
+    const [r, c] = gridId;
+
+    if(frame.type === 'bg') {
+        if(!frames[r][c]) target = document.getElementById(id);
+        frames = bgFrame(frames, frame, r, c);
+    } 
+    
+    if(target) {
+        frames[r][c].targets = target;
+        frames[r][c].easing = 'easeInOutSine';
+        frames[r][c].direction = 'normal';
+    }
+    return frames;
+};
 
 const bgColorFrame = (x, duration, backgroundColor) => {
     return {
@@ -15,10 +78,12 @@ const bgColorFrame = (x, duration, backgroundColor) => {
         duration,
         backgroundColor
     }
-}
+};
 
 export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
-    let frames = [];
+    //creating frames matrix full of nulls(size m.length)
+    createEmptyFrames(m.length, m[0].length);
+    let delay = 0;
     let reachedEnd = false;
     const prev = m.map(row => {
         row = row.map(() => null);
@@ -50,7 +115,10 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
             rq.push(rr);
             cq.push(cc);
             visited[rr][cc] = true;
-            frames.push(bgColorFrame(`r${rr}c${cc}`, 50, '#FF9A00'));
+            // frames.push(bgColorFrame(`r${rr}c${cc}`, 50, '#FF9A00'));
+            gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${rr}c${cc}`, duration: 50, backgroundColor: '#FF9A00', gridId: [rr,cc], delay });
+            delay += 50;
+
             if(m[rr][cc] === m[tr][tc]) {
                 reachedEnd = true;
             }
@@ -61,7 +129,10 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     rq.push(sr);
     cq.push(sc);
     visited[sr][sc] = true;
-    frames.push(bgColorFrame(`r${sr}c${sc}`, 50, '#FF9A00'));
+    // frames.push(bgColorFrame(`r${sr}c${sc}`, 50, '#FF9A00'));
+    gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${sr}c${sc}`, duration: 50, backgroundColor: '#FF9A00', gridId: [sr,sc], delay });
+    delay += 50;
+
     while(rq.length > 0) {
         const r = rq.shift();
         const c = cq.shift();
@@ -78,11 +149,18 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     path.reverse();
     if(path[0][0] === sr && path[0][1] === sc) {
         path.forEach(pos => {
-            frames.push(bgColorFrame(`r${pos[0]}c${pos[1]}`, 50, '#FF165D'));
+            // frames.push(bgColorFrame(`r${pos[0]}c${pos[1]}`, 50, '#FF165D'));
+            gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${pos[0]}c${pos[1]}`, duration: 50, backgroundColor: '#FF165D', gridId: [pos[0],pos[1]], delay });
+            delay += 50;
         })
-        frames.push(bgColorFrame(`r${tr}c${tc}`, 150, '#FF165D'));
+        // frames.push(bgColorFrame(`r${tr}c${tc}`, 150, '#FF165D'));
+        gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${tr}c${tc}`, duration: 150, backgroundColor: '#FF165D', gridId: [tr,tc], delay });
+        delay += 150;
     }
-    return frames;
+
+    //creating and returning a timeline
+    addFramesToTimeline(gridFrames);
+    return searchTimeline;
 };
 
 export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
@@ -131,6 +209,7 @@ export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     for(let x = [tr, tc]; x !== null; x = prev[x[0]][x[1]]) {
         path.push(x);
     }
+    path.reverse();
     path.forEach(([r, c]) => {
         frames.push(bgColorFrame(`r${r}c${c}`, 50, '#FF165D'));
     });

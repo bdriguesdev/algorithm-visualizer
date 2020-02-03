@@ -67,27 +67,29 @@ const SearchGraph = props => {
             breadth: () => breadthFirstSearchFrames(grid, startPosition, finalPosition),
             depth: () => depthFirstSearchFrames(grid, startPosition, finalPosition)
         };
-        const frames = search[props.search.split(' ')[0]]();
-        let delay = 0;
-        frames.forEach((frame, index) => {
-            if(frame.type === 'bg') {
-                setTimeout(() => {
-                    anime({
-                        targets: '#' + frame.x,
-                        direction: 'normal',
-                        duration: frame.duration,
-                        easing: 'easeInOutSine',
-                        backgroundColor: frame.backgroundColor 
-                    });
-                }, delay);
-            }
-            delay += frame.duration;
-            if(index === frames.length - 1) {
-                setTimeout(() => {
-                    setAnimationInProgress(false);
-                }, delay);
-            }
-        });
+        const timeline = breadthFirstSearchFrames(grid, startPosition, finalPosition);
+        timeline.play();
+        // const frames = search[props.search.split(' ')[0]]();
+        // let delay = 0;
+        // frames.forEach((frame, index) => {
+        //     if(frame.type === 'bg') {
+        //         setTimeout(() => {
+        //             anime({
+        //                 targets: '#' + frame.x,
+        //                 direction: 'normal',
+        //                 duration: frame.duration,
+        //                 easing: 'easeInOutSine',
+        //                 backgroundColor: frame.backgroundColor 
+        //             });
+        //         }, delay);
+        //     }
+        //     delay += frame.duration;
+        //     if(index === frames.length - 1) {
+        //         setTimeout(() => {
+        //             setAnimationInProgress(false);
+        //         }, delay);
+        //     }
+        // });
     };
 
     const createObstacles = (row, column, value) => {

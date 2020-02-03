@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
-import anime from 'animejs';
 
 import { insertionSortFrames, bubbleSortFrames, selectionSortFrames, heapSortFrames, mergeSortFrames, quickSortFrames } from '../../utils/sort';
 import './SortGraph.scss';
