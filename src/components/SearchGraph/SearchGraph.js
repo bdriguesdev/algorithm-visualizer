@@ -195,7 +195,7 @@ const SearchGraph = props => {
                 <button onClick={startAnimation} className="button btnPink" >PLAY</button>
                 <button onClick={restartAnimation} className="button btnYellow">RESTART</button>
                 <button onClick={pauseAnimation} className="button btnBlue">PAUSE</button>
-                <button onClick={resetAnimation} className="button btnPurple">RESET</button>
+                <button onClick={resetAnimation} className="button btnPink">RESET</button>
             </div>
         </div>
     )

@@ -17,6 +17,7 @@ const createEmptyFrames = length => {
 };
 
 const addFramesToTimeline = (lineFrames, valueFrames, boxFrames) => {
+    sortTimeline = anime.timeline({ autoplay: false });
     lineFrames.forEach(frame => {
         if(frame) sortTimeline.add(frame, 0);
     });
@@ -194,7 +195,6 @@ const createFrame = (frames, frame) => {
 };
 
 export const insertionSortFrames = arr => {
-    sortTimeline = anime.timeline();
     //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
@@ -236,7 +236,6 @@ export const insertionSortFrames = arr => {
 };
 
 export const bubbleSortFrames = arr => {
-    sortTimeline = anime.timeline();
     //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
@@ -299,7 +298,6 @@ export const bubbleSortFrames = arr => {
 };
 
 export const selectionSortFrames = arr => {
-    sortTimeline = anime.timeline();
     //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
@@ -353,7 +351,6 @@ export const selectionSortFrames = arr => {
 };
 
 export const heapSortFrames = arr => {
-    sortTimeline = anime.timeline();
     //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
@@ -428,7 +425,6 @@ export const heapSortFrames = arr => {
 };
 
 export const mergeSortFrames = arr => {
-    sortTimeline = anime.timeline();
     //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;
@@ -579,7 +575,6 @@ export const mergeSortFrames = arr => {
 };
 
 export const quickSortFrames = arr => {
-    sortTimeline = anime.timeline();
     //preparing frames array
     createEmptyFrames(arr.length);
     let delay = 0;

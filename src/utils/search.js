@@ -24,6 +24,7 @@ const createEmptyFrames = (rlength, clength) => {
 };
 
 const addFramesToTimeline = (gridFrames) => {
+    searchTimeline = anime.timeline({ autoplay: false });
     gridFrames.forEach(row => {
         row.forEach(frame => {
             if(frame) searchTimeline.add(frame, 0);
@@ -72,7 +73,6 @@ const createFrame = (frames, frame) => {
 };
 
 export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
-    searchTimeline = anime.timeline({ autoplay: false });
     //creating frames matrix full of nulls(size m.length)
     createEmptyFrames(m.length, m[0].length);
     let delay = 0;
@@ -152,7 +152,6 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
 };
 
 export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
-    searchTimeline = anime.timeline({ autoplay: false });
     //creating frames matrix full of nulls(size m.length)
     createEmptyFrames(m.length, m[0].length);
     let delay = 0;
