@@ -1,3 +1,5 @@
+@import '../../scss/mixins.scss';
+
 .header {
     width: 90%;
     max-width: 1900px;
@@ -46,6 +48,12 @@
                     background-color: white;
                     box-shadow: 0 0 20px rgba(0,0,0,0.1);
                     padding: 5px 0 10px 0;
+                    @include large-phone {
+                        width: 150px;
+                    }
+                    @include small-phone {
+                        top: 20px;
+                    }
 
                     ul {
                         display: flex;
@@ -81,6 +89,9 @@
 
                 .searchMenu {
                     width: 230px;
+                    @include large-phone {
+                        width: 190px;
+                    }
                 }
             }
         }
