@@ -1,13 +1,31 @@
 @import '../../scss/colors.scss';
+@import '../../scss/mixins';
 
 .searchGraph {
-    min-width: 260px;
     width: 660px;
+    padding: 20px 20px;
+    background-color: white;
+    @include desktop {
+        margin-bottom: 100px;
+    }
+    @include tablet {
+        width: 500px;
+        margin-bottom: 80px;
+    }
+    @include large-phone {
+        width: 400px;
+        margin-bottom: 60px;
+    }
+    @include medium-phone {
+        width: 300px;
+        margin-bottom: 50px;
+    }
+    @include small-phone {
+        width: 250px;
+    }
 
     .searchElements {
         width: 100%;
-        padding: 20px 20px;
-        background-color: white;
         display: flex;
         position: relative;
         flex-direction: column;
@@ -33,6 +51,16 @@
         display: flex;
         justify-content: flex-start;
         margin-top: 30px;
+        @include desktop {  
+            flex-wrap: wrap;
+        }
+        @include large-phone {
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        @include medium-phone {
+            justify-content: center;
+        }
 
         .button {
             width: 110px;
@@ -45,6 +73,10 @@
             cursor: pointer;
             transition: box-shadow 200ms ease-in-out;
             outline: none;
+            @include large-phone{
+                width: 90px;
+                height: 30px;
+            }
         }
 
         .button:hover {
@@ -65,6 +97,19 @@
 
         .button:nth-child(1n + 2) {
             margin-left: 18px;
+            @include large-phone {
+                margin-left: 0;
+            }
+        }
+
+        .button:nth-child(1n + 1) {
+            @include large-phone {
+                margin-top: 10px;
+            }
+            @include medium-phone {
+                margin-top: 10px;
+                margin-left: 10px;
+            }
         }
     }
 }
@@ -77,4 +122,16 @@
     width: 100%;
     height: 100%;
     cursor: pointer;
+    @include tablet {
+        font-size: 1.2rem;
+    }
+    @include large-phone{
+        font-size: 1.1rem;
+    }
+    @include medium-phone{
+        font-size: 0.9rem;
+    }
+    @include small-phone {
+        font-size: 0.8rem;
+    }
 }

@@ -7,6 +7,7 @@ import { randomValue } from '../../utils/utils';
 
 const SearchGraph = props => {
     const [gridWidth, setGridWidth] = useState(null);
+    const [width, setWidth] = useState(null);
     const [timeline, setTimeline] = useState(null);
     const [startPosition, setStartPosition] = useState(null);
     const [finalPosition, setFinalPosition] = useState(null);
@@ -16,11 +17,17 @@ const SearchGraph = props => {
     timelineRef.current = timeline;
 
     useEffect(() => {
+        let space = document.querySelector('.searchElements').getBoundingClientRect().width;
+        console.log('test', width, gridWidth, (space - (2 * 15)) / 16);
+        setGridWidth((space - (2 * 15)) / 16);
+    }, [width]);
+
+    useEffect(() => {
         const startPos = [randomValue(0, 8), randomValue(0,15)];
         const finalPos = [];
-        const space = document.querySelector('.searchElements').getBoundingClientRect().width - 40;
 
-        setGridWidth((space - (2 * 15)) / 16);
+        window.addEventListener('resize', changeWidth);
+
         let antiInfinite = 0;
         while(finalPos.length === 0) {
             antiInfinite++;
@@ -33,7 +40,15 @@ const SearchGraph = props => {
         }
         changeStartPos(startPos);
         changeFinalPos(finalPos)
+
+        return () => {
+            window.removeEventListener('resize', changeWidth);
+        }
     }, []);
+
+    const changeWidth = () => {
+        setWidth(window.innerWidth);
+    };
 
     const changeStartPos = ([ r, c ]) => {
         const startDiv = document.getElementById('startElement');

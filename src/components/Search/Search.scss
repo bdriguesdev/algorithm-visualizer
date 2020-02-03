@@ -1,9 +1,18 @@
 @import '../../scss/colors.scss';
+@import '../../scss/mixins';
 
 .search {
     display: flex;
     justify-content: center;
-    margin-top: 70px;
+    margin: 0 auto;
+    margin-top: 150px;
+    width: 90%;
+    max-width: 1900px;
+    @include desktop {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 70px;
+    }
 
     .info {
         display: flex;
@@ -13,6 +22,24 @@
         width: 330px;
         padding-right: 30px;
         height: 490px;
+        @include desktop {
+            width: auto;
+            padding-right: 0;
+            height: auto;
+            width: 700px;
+        }
+        @include tablet {
+            width: 540px;
+        }
+        @include large-phone {
+            width: 440px;
+        }
+        @include medium-phone {
+            width: 340px;
+        }
+        @include small-phone {
+            width: 290px;
+        }
 
         h2 {
             margin: 0;
@@ -21,12 +48,21 @@
             font-size: 1.875rem;
             text-transform: uppercase;
             margin-bottom: 46px;
+            @include desktop {
+                margin-bottom: 25px;
+            }
+            @include medium-phone {
+                text-align: left;
+            }
         }
         
         .searchForm {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+            @include desktop {
+                margin-bottom: 25px;
+            }
 
             input {
                 width: 45px;
@@ -52,6 +88,27 @@
                 font-weight: 400;
                 font-size: 1rem;
             }
+
+            .searchCaseLowRes {
+                display: none;
+                @include desktop {
+                    display: block;
+                    margin-top: 15px;
+                }
+
+                h3 {
+                    margin: 0;
+                    font-weight: 500;
+                    text-transform: uppercase;
+                    font-size: 1rem;
+                }
+
+                span {
+                    color: $dark-gray;
+                    font-size: 1rem;
+                    font-size: 400;
+                }
+            }
         }
 
         .searchCases {
@@ -59,6 +116,9 @@
             display: flex;    
             justify-content: space-between;
             width: 100%;
+            @include desktop {
+                display: none;
+            }
 
             .searchCase {
 
