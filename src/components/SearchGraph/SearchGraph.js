@@ -79,7 +79,7 @@ const SearchGraph = props => {
         if(timeline) timeline.pause();
         const elements = document.querySelectorAll('.searchElement');
         elements.forEach(element => {
-            element.style.backgroundColor = '#3EC1D3';
+            element.style.backgroundColor = props.color;
         });
         setGrid(oldValue => {
             return oldValue.map((row, rowIndex) => {
