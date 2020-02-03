@@ -7,7 +7,6 @@ const SortGraph = props => {
     const [ array, setArray ] = useState([]);
     const [ minValue, setMinValue ] = useState(null);
     const [ maxValue, setMaxValue ] = useState(null);
-    const [ paused, setPaused ] = useState(false);
     const [ timeline, setTimeline ] = useState(null);
     const [ animationInProgress, setAnimationInProgress ] = useState(false);
 
@@ -85,6 +84,8 @@ const SortGraph = props => {
     };
 
     const resetAnimation = sort => {
+        if(timeline) timeline.pause();
+        setTimeline(null);
         if(sort === 'merge') {
             const elements = document.querySelectorAll('.elementLine');
             elements.forEach((line, index) => {
@@ -108,21 +109,14 @@ const SortGraph = props => {
     }
 
     const handleStart = () => {
-        if(!animationInProgress) {
-            setAnimationInProgress(true);
-            if(timeline) timeline.play();
-            else {
-                sortAnimation();
-                resetAnimation(props.sort);
-            }
+        if(timeline) timeline.play();
+        else {
+            sortAnimation();
         }
     };
 
     const handlePause = () => {
-        if(animationInProgress) {
-            setAnimationInProgress(false);
-        }
-        timeline.pause();
+        if(timeline) timeline.pause();
     };
 
     return (
