@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import anime from 'animejs';
 
 import './SearchGraph.scss';
@@ -7,10 +7,13 @@ import { randomValue } from '../../utils/utils';
 
 const SearchGraph = props => {
     const [gridWidth, setGridWidth] = useState(null);
-    const [animationInProgress, setAnimationInProgress] = useState(false);
+    const [timeline, setTimeline] = useState(null);
     const [startPosition, setStartPosition] = useState(null);
     const [finalPosition, setFinalPosition] = useState(null);
     const [grid, setGrid] = useState(m1);
+
+    const timelineRef = useRef(timeline);
+    timelineRef.current = timeline;
 
     useEffect(() => {
         const startPos = [randomValue(0, 8), randomValue(0,15)];
@@ -35,6 +38,7 @@ const SearchGraph = props => {
     const changeStartPos = ([ r, c ]) => {
         const startDiv = document.getElementById('startElement');
         const newStartPos = document.getElementById(`r${r}c${c}`);
+
         newStartPos.appendChild(startDiv);
         setStartPosition([r, c]);
     };
@@ -42,11 +46,13 @@ const SearchGraph = props => {
     const changeFinalPos = ([ r, c ]) => {
         const finalDiv = document.getElementById('finalElement');
         const newFinalPos = document.getElementById(`r${r}c${c}`);
+
         newFinalPos.appendChild(finalDiv);
         setFinalPosition([r, c]);
     };
 
     const resetAnimation = () => {
+        if(timeline) timeline.pause();
         const elements = document.querySelectorAll('.searchElement');
         elements.forEach(element => {
             element.style.backgroundColor = '#3EC1D3';
@@ -60,6 +66,7 @@ const SearchGraph = props => {
         });
         changeFinalPos(finalPosition);
         changeStartPos(startPosition);
+        setTimeline(null);
     };
 
     const searchAnimation = () => {
@@ -67,32 +74,13 @@ const SearchGraph = props => {
             breadth: () => breadthFirstSearchFrames(grid, startPosition, finalPosition),
             depth: () => depthFirstSearchFrames(grid, startPosition, finalPosition)
         };
-        const timeline = search[props.search.split(' ')[0]]();
-        timeline.play();
-        // const frames = search[props.search.split(' ')[0]]();
-        // let delay = 0;
-        // frames.forEach((frame, index) => {
-        //     if(frame.type === 'bg') {
-        //         setTimeout(() => {
-        //             anime({
-        //                 targets: '#' + frame.x,
-        //                 direction: 'normal',
-        //                 duration: frame.duration,
-        //                 easing: 'easeInOutSine',
-        //                 backgroundColor: frame.backgroundColor 
-        //             });
-        //         }, delay);
-        //     }
-        //     delay += frame.duration;
-        //     if(index === frames.length - 1) {
-        //         setTimeout(() => {
-        //             setAnimationInProgress(false);
-        //         }, delay);
-        //     }
-        // });
+        const newTimeline = search[props.search.split(' ')[0]]();
+        setTimeline(newTimeline);
+        newTimeline.play();
     };
 
     const createObstacles = (row, column, value) => {
+        setTimeline(null);
         if(startPosition[0] === row && startPosition[1] === column) return;
         else if(finalPosition[0] === row && finalPosition[1] === column) return;
         setGrid(oldValue => {
@@ -119,6 +107,19 @@ const SearchGraph = props => {
             return oldValue;
         });
     };
+    
+    const pauseAnimation = () => {
+        if(timeline) timeline.pause();
+    };
+
+    const startAnimation = () => {
+        if(timeline) timeline.play();
+        else searchAnimation();
+    };
+
+    const restartAnimation = () => {
+        if(timeline) timeline.restart();
+    };
 
     const dragStart = evt => {
         evt.dataTransfer.setData("id", evt.target.getAttribute('id'));
@@ -138,8 +139,10 @@ const SearchGraph = props => {
         const pos = evt.dataTransfer.getData("element");
         const data = evt.dataTransfer.getData("id");
         if(pos === 'start') {
+            setTimeline(null);
             setStartPosition([row, column]);
         } else if(pos === 'final') {
+            setTimeline(null);
             setFinalPosition([row, column]);
         }
         if(grid[row][column] === '#') return;
@@ -189,9 +192,10 @@ const SearchGraph = props => {
                 }
             </div>
             <div className="searchButtons">
-                <button onClick={searchAnimation} className="button btnPink" >START</button>
-                <button onClick={resetAnimation} className="button btnYellow">RESET</button>
-                <button className="button btnBlue">PAUSE</button>
+                <button onClick={startAnimation} className="button btnPink" >PLAY</button>
+                <button onClick={restartAnimation} className="button btnYellow">RESTART</button>
+                <button onClick={pauseAnimation} className="button btnBlue">PAUSE</button>
+                <button onClick={resetAnimation} className="button btnPurple">RESET</button>
             </div>
         </div>
     )

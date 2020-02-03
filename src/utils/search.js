@@ -11,7 +11,7 @@ for(let x = 0; x < 9; x++) {
 };
 
 let gridFrames = [];
-let searchTimeline = anime.timeline();
+let searchTimeline = null;
 
 const createEmptyFrames = (rlength, clength) => {
     gridFrames = [];
@@ -71,16 +71,8 @@ const createFrame = (frames, frame) => {
     return frames;
 };
 
-const bgColorFrame = (x, duration, backgroundColor) => {
-    return {
-        type: 'bg',
-        x,
-        duration,
-        backgroundColor
-    }
-};
-
 export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
+    searchTimeline = anime.timeline({ autoplay: false });
     //creating frames matrix full of nulls(size m.length)
     createEmptyFrames(m.length, m[0].length);
     let delay = 0;
@@ -115,7 +107,6 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
             rq.push(rr);
             cq.push(cc);
             visited[rr][cc] = true;
-            // frames.push(bgColorFrame(`r${rr}c${cc}`, 50, '#FF9A00'));
             gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${rr}c${cc}`, duration: 50, backgroundColor: '#FF9A00', gridId: [rr,cc], delay });
             delay += 50;
 
@@ -129,7 +120,6 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     rq.push(sr);
     cq.push(sc);
     visited[sr][sc] = true;
-    // frames.push(bgColorFrame(`r${sr}c${sc}`, 50, '#FF9A00'));
     gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${sr}c${sc}`, duration: 50, backgroundColor: '#FF9A00', gridId: [sr,sc], delay });
     delay += 50;
 
@@ -149,11 +139,9 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     path.reverse();
     if(path[0][0] === sr && path[0][1] === sc) {
         path.forEach(pos => {
-            // frames.push(bgColorFrame(`r${pos[0]}c${pos[1]}`, 50, '#FF165D'));
             gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${pos[0]}c${pos[1]}`, duration: 50, backgroundColor: '#FF165D', gridId: [pos[0],pos[1]], delay });
             delay += 50;
         })
-        // frames.push(bgColorFrame(`r${tr}c${tc}`, 150, '#FF165D'));
         gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${tr}c${tc}`, duration: 150, backgroundColor: '#FF165D', gridId: [tr,tc], delay });
         delay += 150;
     }
@@ -164,6 +152,7 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
 };
 
 export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
+    searchTimeline = anime.timeline({ autoplay: false });
     //creating frames matrix full of nulls(size m.length)
     createEmptyFrames(m.length, m[0].length);
     let delay = 0;
