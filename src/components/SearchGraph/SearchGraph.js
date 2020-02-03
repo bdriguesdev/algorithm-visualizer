@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import anime from 'animejs';
 
 import './SearchGraph.scss';
@@ -13,8 +13,18 @@ const SearchGraph = props => {
     const [finalPosition, setFinalPosition] = useState(null);
     const [grid, setGrid] = useState(m1);
 
-    const timelineRef = useRef(timeline);
-    timelineRef.current = timeline;
+    useSearch(props.search);
+
+    function useSearch(value) {
+        const ref = useRef();
+        useLayoutEffect(() => {
+            if(ref.current && value !== ref.current) {
+                resetAnimation();
+            }
+            ref.current = value;
+        });
+        return ref.current;
+    }
 
     useEffect(() => {
         let space = document.querySelector('.searchElements').getBoundingClientRect().width;
