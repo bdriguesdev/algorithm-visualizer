@@ -8,7 +8,6 @@ const SortGraph = props => {
     const [ minValue, setMinValue ] = useState(null);
     const [ maxValue, setMaxValue ] = useState(null);
     const [ timeline, setTimeline ] = useState(null);
-    const [ animationInProgress, setAnimationInProgress ] = useState(false);
 
     useSort(props.sort);
 
@@ -50,24 +49,17 @@ const SortGraph = props => {
     const defineElementHeight = (value, index) => {
         const percentValue = 440 / 50;
         const height = value * percentValue;
-        const graphTotalWidth = document.querySelector('.sortGraph').getBoundingClientRect().width;
-        const barWidth = (graphTotalWidth - (array.length - 1) * 3) / array.length;
-
         return {
             height: height + 'px',
-            width: barWidth,
             backgroundColor: props.color
         };
     };
 
     const calcLeftValue = index => {
-        const graphTotalWidth = document.querySelector('.sortGraph').getBoundingClientRect().width;
-        const barWidth = (graphTotalWidth - (array.length - 1) * 3) / array.length;
-
         return {
-            left: index === 0? 20 + 'px': 20 + (barWidth * index ) + (3 * index) + 'px'
+            left: index === 0? 0 + 'px': (5 * index ) + (0.59 * index) + '%'
         };
-    }
+    };
 
     const sortAnimation = () => {
         const sort = {
@@ -136,7 +128,7 @@ const SortGraph = props => {
                 }
             </div>  
             <div className="sortButtons">
-                <button style={animationInProgress? { cursor: 'no-drop', color: 'rgba(255,255,255,0.4)' }: {}} onClick={handleStart} className="button btnPink" >PLAY</button>
+                <button onClick={handleStart} className="button btnPink" >PLAY</button>
                 <button onClick={() => resetAnimation(props.sort)} className="button btnYellow">RESET</button>
                 <button onClick={handlePause} className="button btnBlue">PAUSE</button>
             </div>

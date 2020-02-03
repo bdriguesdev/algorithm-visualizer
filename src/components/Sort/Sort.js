@@ -16,15 +16,6 @@ const Sort = props => {
                     <div className="inputContainer">
                         <ColorSelector color={color} setColor={setColor} colors={['#3EC1D3', '#FF9A00', '#FF165D', '#FF16CC', '#B416FF', '#46F829', '#FFF500']} />
                     </div>
-                    {/* <div className="inputContainer">
-                        <input type="text" id="arraySize" placeholder="2-30" /><label htmlFor="arraySize">array size</label><br />
-                    </div>
-                    <div className="inputContainer">
-                        <input type="text" id="animationTime" placeholder="ms" /><label htmlFor="animationTime">animation time</label><br />
-                    </div>
-                    <div className="inputContainer">
-                        <input type="text" id="array" placeholder="2-30" /><label htmlFor="array">set an array*</label>
-                    </div> */}
                 </form>
                 <div className="sortCases">
                     <div className="sortCase">

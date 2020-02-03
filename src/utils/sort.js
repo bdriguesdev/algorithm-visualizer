@@ -29,11 +29,9 @@ const addFramesToTimeline = (lineFrames, valueFrames, boxFrames) => {
     });
 };
 
-const calcNewPosition = (index, length) => {
-    const graphTotalWidth = document.querySelector('.sortGraph').getBoundingClientRect().width;
-    const barWidth = (graphTotalWidth - (length - 1) * 3) / length;
+const calcNewPosition = index => {
     return {
-        left: index === 0? 20 + 'px': 20 + (barWidth * index ) + (3 * index) + 'px'
+        left: index === '0%'? 0 + 'px': (5 * index ) + (0.59 * index) + '%'
     };
 };
 
@@ -47,7 +45,7 @@ const elementHeight = value => {
 };
 
 const moveFrame = (frames, frame, id) => {
-    const leftPos = calcNewPosition(frame.newIndex, 18).left;
+    const leftPos = calcNewPosition(frame.newIndex).left;
     if(frames[id]) {
         let prevDelay = 0
         frames[id].left.forEach(({ delay, duration }) =>  {

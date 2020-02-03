@@ -13,6 +13,9 @@
         align-items: center;
         margin-top: 70px;
     }
+    @include medium-phone {
+        margin-top: 50px;
+    }
 
     .info {
         display: flex;
@@ -38,7 +41,7 @@
             width: 340px;
         }
         @include small-phone {
-            width: 290px;
+            width: 270px;
         }
 
         h2 {

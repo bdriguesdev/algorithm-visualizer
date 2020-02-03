@@ -1,30 +1,57 @@
 @import '../../scss/colors.scss';
+@import '../../scss/mixins.scss';
 
 .sortGraph {
     min-width: 260px;
     width: 660px;
+    padding: 20px 20px;
+    background-color: white;
+    @include desktop {
+        margin-bottom: 100px;
+    }
+    @include tablet {
+        width: 500px;
+        margin-bottom: 80px;
+    }
+    @include large-phone {
+        width: 400px;
+        margin-bottom: 60px;
+    }
+    @include medium-phone {
+        width: 300px;
+        margin-bottom: 50px;
+    }
+    @include small-phone {
+        width: 250px;
+        padding: 10px 10px;
+    }
 
     .elements {
         height: 450px;
         width: 100%;
-        padding: 20px 20px;
-        background-color: white;
         display: flex;
         position: relative;
+        padding-top: 25px;
     }
 
     .element {
         position: absolute;
-        bottom: 12px;
+        bottom: 5px;
+        width: 5%;
 
         .elementLine {
             background-color: $blue;
+            width: 100%;
         }
 
         .elementValue {
             color: #575757;
             font-size: 0.875rem;
             font-weight: 400;
+            @include medium-phone {
+                font-size: 0.795rem;
+                font-weight: 500;
+            }
         }
     }
 
@@ -32,6 +59,16 @@
         display: flex;
         justify-content: flex-start;
         margin-top: 30px;
+        @include desktop {  
+            flex-wrap: wrap;
+        }
+        @include large-phone {
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        @include small-phone {
+            justify-content: center;
+        }
 
         .button {
             width: 110px;
@@ -44,6 +81,10 @@
             cursor: pointer;
             transition: box-shadow 200ms ease-in-out;
             outline: none;
+            @include large-phone{
+                width: 90px;
+                height: 30px;
+            }
         }
 
         .button:hover {
@@ -64,6 +105,19 @@
 
         .button:nth-child(1n + 2) {
             margin-left: 18px;
+            @include large-phone {
+                margin-left: 0;
+            }
+        }
+
+        .button:nth-child(1n + 1) {
+            @include large-phone {
+                margin-top: 10px;
+            }
+            @include small-phone {
+                margin-top: 10px;
+                margin-left: 10px;
+            }
         }
     }
 }

@@ -18,7 +18,6 @@ const SearchGraph = props => {
 
     useEffect(() => {
         let space = document.querySelector('.searchElements').getBoundingClientRect().width;
-        console.log('test', width, gridWidth, (space - (2 * 15)) / 16);
         setGridWidth((space - (2 * 15)) / 16);
     }, [width]);
 
