@@ -164,7 +164,9 @@ export const breadthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
 };
 
 export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
-    let frames = [];
+    //creating frames matrix full of nulls(size m.length)
+    createEmptyFrames(m.length, m[0].length);
+    let delay = 0;
     const dr = [-1, 0, +1, 0];
     const dc = [0, +1, 0, -1];
     const visited = m.map(row => {
@@ -176,6 +178,7 @@ export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
         return row
     });
     let reachedEnd = false;
+
     const getNodes = (r, c) => {
         let nodes = [];
         for(let x = 0; x < 4; x++) {
@@ -192,9 +195,12 @@ export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
         return nodes;
     };
     const dfs = (r, c) => {
-        frames.push(bgColorFrame(`r${r}c${c}`, 50, '#FF9A00'));
+        gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${r}c${c}`, duration: 50, backgroundColor: '#FF9A00', gridId: [r,c], delay });
+        delay += 50;
         visited[r][c] = true;
+
         const nodes = getNodes(r, c);
+
         for(let y = 0; y < nodes.length; y++) {
             if(nodes[y][0] === tr && nodes[y][1] === tc) {
                 reachedEnd = true;
@@ -211,7 +217,11 @@ export const depthFirstSearchFrames = (m, [sr, sc], [tr, tc]) => {
     }
     path.reverse();
     path.forEach(([r, c]) => {
-        frames.push(bgColorFrame(`r${r}c${c}`, 50, '#FF165D'));
+        gridFrames = createFrame(gridFrames, { type: 'bg', id: `r${r}c${c}`, duration: 50, backgroundColor: '#FF165D', gridId: [r,c], delay });
+        delay += 50;
     });
-    return frames;
+
+    //creating and returning a timeline
+    addFramesToTimeline(gridFrames);
+    return searchTimeline;
 };

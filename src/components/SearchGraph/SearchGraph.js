@@ -67,7 +67,7 @@ const SearchGraph = props => {
             breadth: () => breadthFirstSearchFrames(grid, startPosition, finalPosition),
             depth: () => depthFirstSearchFrames(grid, startPosition, finalPosition)
         };
-        const timeline = breadthFirstSearchFrames(grid, startPosition, finalPosition);
+        const timeline = search[props.search.split(' ')[0]]();
         timeline.play();
         // const frames = search[props.search.split(' ')[0]]();
         // let delay = 0;
