@@ -80,7 +80,7 @@ const SearchGraph = props => {
     };
 
     const createObstacles = (row, column, value) => {
-        setTimeline(null);
+        if(timeline) resetAnimation();
         if(startPosition[0] === row && startPosition[1] === column) return;
         else if(finalPosition[0] === row && finalPosition[1] === column) return;
         setGrid(oldValue => {
@@ -139,9 +139,11 @@ const SearchGraph = props => {
         const pos = evt.dataTransfer.getData("element");
         const data = evt.dataTransfer.getData("id");
         if(pos === 'start') {
+            if(timeline) resetAnimation();
             setTimeline(null);
             setStartPosition([row, column]);
         } else if(pos === 'final') {
+            if(timeline) resetAnimation();
             setTimeline(null);
             setFinalPosition([row, column]);
         }
