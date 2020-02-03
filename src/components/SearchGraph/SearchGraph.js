@@ -191,7 +191,7 @@ const SearchGraph = props => {
                                         return (
                                             <div 
                                                 key={`${element}${column}`}
-                                                style={element === '#'? { width: gridWidth + 'px', height: gridWidth + 'px', backgroundColor: '#000' }: { width: gridWidth + 'px', height: gridWidth + 'px' }} 
+                                                style={element === '#'? { width: gridWidth + 'px', height: gridWidth + 'px', backgroundColor: '#000' }: { width: gridWidth + 'px', height: gridWidth + 'px', backgroundColor: props.color }} 
                                                 className="searchElement" id={`r${index}c${column}`}
                                                 onDragEnter={dragEnter}
                                                 onDragOver={dragOver}

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 
 import './Search.scss';
 import SearchGraph from '../SearchGraph/SearchGraph';
+import ColorSelector from '../ColorSelector/ColorSelector';
 
 const Search = props => {
     const [ width, setWidth ] = useState(null);
+    const [ color, setColor ] = useState('#3EC1D3')
 
     useEffect(() => {
         window.addEventListener('resize', changeWidth);
@@ -34,7 +36,7 @@ const Search = props => {
                 <h2>{ props.searchName } search</h2>
                 <form className="searchForm">
                     <div className="inputContainer">
-                        <input type="text" id="color"/><label htmlFor="color">grid color</label><br />
+                        <ColorSelector color={color} setColor={setColor} colors={['#3EC1D3', '#FF16CC', '#B416FF', '#46F829', '#FFF500']} />
                     </div>
                     <div className="searchCaseLowRes">
                         <h3 style={{ color: '#FF165D' }} >TIME COMPLEXITY</h3>
@@ -48,7 +50,7 @@ const Search = props => {
                     </div>
                 </div>
             </div>
-            <SearchGraph search={props.searchName} />
+            <SearchGraph search={props.searchName} color={color} />
         </section>
     )
 };
