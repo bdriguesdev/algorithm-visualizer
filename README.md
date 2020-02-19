@@ -1,4 +1,5 @@
 # 💻 Algorithm Visualizer
+Demo: https://algorithmvisualizerbdrigues.netlify.com/ <br>
 Algorithm visualizer is a project with the objective to put together my knowledge in Frontend and algorithms/data structure, two “areas” that I have a great interest in. The website can simulate, with animations, how the algorithm works, including sorting algorithms and search in a graph.
 
 ```
